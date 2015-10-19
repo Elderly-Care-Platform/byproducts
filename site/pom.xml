@@ -3,7 +3,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>com.by</groupId>
+		<groupId>com.beautifulyears</groupId>
 		<artifactId>ecommerce-website</artifactId>
 		<version>1.0</version>
 	</parent>
@@ -22,7 +22,7 @@
 	</properties>
 	<build>
 		<outputDirectory>${webappDirectory}/WEB-INF/classes</outputDirectory>
-		<finalName>by</finalName>
+		<finalName>beautifulyears</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -117,7 +117,7 @@
 	</build>
 	<dependencies>
 		<dependency>
-			<groupId>com.by</groupId>
+			<groupId>com.beautifulyears</groupId>
 			<artifactId>core</artifactId>
 		</dependency>
 		<dependency>
@@ -190,6 +190,13 @@
 			<groupId>org.apache.lucene</groupId>
 			<artifactId>lucene-analyzers-common</artifactId>
 			<version>4.5.1</version>
+		</dependency>
+
+		<!-- Quartz Job Schedular -->
+		<dependency>
+			<groupId>org.quartz-scheduler</groupId>
+			<artifactId>quartz</artifactId>
+			<version>1.8.6</version>
 		</dependency>
 	</dependencies>
 

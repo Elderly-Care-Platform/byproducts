@@ -25,6 +25,8 @@ import org.broadleafcommerce.core.pricing.service.exception.PricingException;
 import org.broadleafcommerce.core.web.api.BroadleafWebServicesException;
 import org.broadleafcommerce.core.web.api.wrapper.OrderWrapper;
 import org.broadleafcommerce.core.web.order.CartState;
+import org.broadleafcommerce.profile.core.domain.Customer;
+import org.broadleafcommerce.profile.web.core.CustomerState;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -74,7 +76,15 @@ public class CartEndpoint extends org.broadleafcommerce.core.web.api.endpoint.or
   @POST
   public OrderWrapper createNewCartForCustomer(@Context HttpServletRequest request) {
     logger.debug("Executing method : createNewCartForCustomer()");
-    return super.createNewCartForCustomer(request);
+    Customer customer = CustomerState.getCustomer(request);
+
+    if (customer == null) {
+        customer = customerService.createCustomerFromId(null);
+        CustomerState.setCustomer(customer);
+    }
+    
+    OrderWrapper order = super.createNewCartForCustomer(request);
+    return order;
   }
 
   /*

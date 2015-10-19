@@ -20,6 +20,7 @@ public class UpdateOrderStatusJob extends QuartzJobBean {
 
   @Override
   protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
+    System.out.println("**********cron job");
     updateOrderStatusService.updateOrderStatus();
   }
 }

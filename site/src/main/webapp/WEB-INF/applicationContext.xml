@@ -328,6 +328,9 @@
 	<bean id="blCustomerService"
 		class="com.beautifulyears.service.customer.ExtendCustomerServiceImpl"
 		scope="prototype" />
+		
+	<bean id="blCustomerDao" class="com.beautifulyears.dao.customer.ExtendCustomerDaoImpl"
+		scope="prototype" />
 
 	<bean id="blFedExOrderService"
 		class="com.beautifulyears.service.fedExOrder.FedExOrderServiceImpl"
