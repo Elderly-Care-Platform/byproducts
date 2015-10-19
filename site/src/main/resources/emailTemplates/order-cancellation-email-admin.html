@@ -1,0 +1,43 @@
+<html>
+  <head><title>Order Confirmation Email</title></head>
+  <body background="#FFFFFF">
+  	Hi Admin,
+  	An order is cancelled.
+  	<br></br>
+  	<hr></hr>
+  	Please find below, the summary of cancelled order.
+  	<br></br>
+  	<br></br>
+  	<div th:each="orderItem : ${order.orderItems}">
+  		<div>
+  			<span>Item Name:</span>
+  			<span th:text="${orderItem.name}"></span>
+  		</div>
+  		<div>
+  			<span>Item Price:</span>
+  			<span th:text="${orderItem.salePrice}"></span>
+  		</div>
+  		<div>
+  			<span>Quantity:</span>
+  			<span th:text="${orderItem.quantity}"></span>
+  		</div>
+  		<!-- <div>
+  			<span>Subtotal:</span>
+  			<span th:text="${orderItem.price}"></span>
+  		</div> -->
+  		<br></br>
+  	</div>
+  	<div>
+  		<span>Order Number:</span>
+  		<span th:text="${order.orderNumber}"></span>
+  	</div>
+  	<div>
+  		<span>Order Date:</span>
+  		<span th:text="${order.submitDate}"></span>
+  	</div>
+  	<div>
+  		<span>Order Payment:</span>
+  		<span th:text="${order.total}"></span>
+  	</div>
+  </body>
+</html>
