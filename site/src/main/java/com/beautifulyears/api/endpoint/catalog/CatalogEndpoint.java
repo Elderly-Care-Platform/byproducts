@@ -141,15 +141,17 @@ public class CatalogEndpoint extends
             }
           }
         }
+        
+        result.setTotalResults(activeProductList.size());
+        result.setPage(page);
+        result.setPageSize(pageSize);
 
         // Pagination
         activeProductList = getProductPagination(activeProductList, page, pageSize);
 
         // set products
         result.setProducts(activeProductList);
-        result.setTotalResults(activeProductList.size());
-        result.setPage(page);
-        result.setPageSize(pageSize);
+        
       }
 
       facetService.setActiveFacetResults(result.getFacets(), request);
