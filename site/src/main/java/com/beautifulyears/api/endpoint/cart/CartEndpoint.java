@@ -1,5 +1,6 @@
 package com.beautifulyears.api.endpoint.cart;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -21,6 +22,9 @@ import org.broadleafcommerce.core.offer.domain.OfferCode;
 import org.broadleafcommerce.core.offer.service.exception.OfferMaxUseExceededException;
 import org.broadleafcommerce.core.order.domain.NullOrderImpl;
 import org.broadleafcommerce.core.order.domain.Order;
+import org.broadleafcommerce.core.order.service.OrderService;
+import org.broadleafcommerce.core.order.service.call.MergeCartResponse;
+import org.broadleafcommerce.core.order.service.exception.RemoveFromCartException;
 import org.broadleafcommerce.core.pricing.service.exception.PricingException;
 import org.broadleafcommerce.core.web.api.BroadleafWebServicesException;
 import org.broadleafcommerce.core.web.api.wrapper.OrderWrapper;
@@ -31,6 +35,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.beautifulyears.api.wrapper.ExtendOrderWrapper;
+import com.beautifulyears.dao.order.ExtendOrderDao;
+import com.beautifulyears.service.order.ExtendOrderService;
 
 /**
  * This endpoint provide services related to cart operations.
@@ -44,6 +50,9 @@ import com.beautifulyears.api.wrapper.ExtendOrderWrapper;
 @Produces(value = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 @Consumes(value = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 public class CartEndpoint extends org.broadleafcommerce.core.web.api.endpoint.order.CartEndpoint {
+	
+	@Resource(name = "blExtendOrderService")
+	protected ExtendOrderService extendOrderService;
 
   final static Logger logger = Logger.getLogger(CartEndpoint.class);
 
@@ -85,6 +94,26 @@ public class CartEndpoint extends org.broadleafcommerce.core.web.api.endpoint.or
     
     OrderWrapper order = super.createNewCartForCustomer(request);
     return order;
+  }
+  
+  
+  @POST
+  @Path("/merge")
+  public OrderWrapper mergeCart(@Context HttpServletRequest request,
+		  @QueryParam("guestOrderId") Long guestOrderId) throws PricingException, RemoveFromCartException {
+    logger.debug("Executing method : createNewCartForCustomer()");
+    Customer customer = CustomerState.getCustomer(request);
+
+    if (customer == null) {
+        customer = customerService.createCustomerFromId(null);
+        CustomerState.setCustomer(customer);
+    }
+    
+    MergeCartResponse mergedOrder = extendOrderService.mergeOrder(customer, guestOrderId, true);
+    OrderWrapper wrapper = (OrderWrapper) context.getBean(OrderWrapper.class.getName());
+    wrapper.wrapDetails(mergedOrder.getOrder(), request);
+
+    return wrapper;
   }
 
   /*
