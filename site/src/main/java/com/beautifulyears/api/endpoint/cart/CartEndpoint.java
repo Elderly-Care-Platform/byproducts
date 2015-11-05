@@ -1,5 +1,8 @@
 package com.beautifulyears.api.endpoint.cart;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
@@ -22,9 +25,14 @@ import org.broadleafcommerce.core.offer.domain.OfferCode;
 import org.broadleafcommerce.core.offer.service.exception.OfferMaxUseExceededException;
 import org.broadleafcommerce.core.order.domain.NullOrderImpl;
 import org.broadleafcommerce.core.order.domain.Order;
+import org.broadleafcommerce.core.order.domain.OrderItem;
+import org.broadleafcommerce.core.order.service.OrderItemService;
 import org.broadleafcommerce.core.order.service.OrderService;
 import org.broadleafcommerce.core.order.service.call.MergeCartResponse;
+import org.broadleafcommerce.core.order.service.call.OrderItemRequestDTO;
+import org.broadleafcommerce.core.order.service.exception.AddToCartException;
 import org.broadleafcommerce.core.order.service.exception.RemoveFromCartException;
+import org.broadleafcommerce.core.order.service.type.OrderStatus;
 import org.broadleafcommerce.core.pricing.service.exception.PricingException;
 import org.broadleafcommerce.core.web.api.BroadleafWebServicesException;
 import org.broadleafcommerce.core.web.api.wrapper.OrderWrapper;
@@ -53,6 +61,9 @@ public class CartEndpoint extends org.broadleafcommerce.core.web.api.endpoint.or
 	
 	@Resource(name = "blExtendOrderService")
 	protected ExtendOrderService extendOrderService;
+	
+	@Resource(name = "blOrderItemService")
+    protected OrderItemService orderItemService;
 
   final static Logger logger = Logger.getLogger(CartEndpoint.class);
 
@@ -100,7 +111,7 @@ public class CartEndpoint extends org.broadleafcommerce.core.web.api.endpoint.or
   @POST
   @Path("/merge")
   public OrderWrapper mergeCart(@Context HttpServletRequest request,
-		  @QueryParam("guestOrderId") Long guestOrderId) throws PricingException, RemoveFromCartException {
+		  @QueryParam("guestOrderId") Long guestOrderId) throws PricingException, RemoveFromCartException, AddToCartException {
     logger.debug("Executing method : createNewCartForCustomer()");
     Customer customer = CustomerState.getCustomer(request);
 
@@ -110,6 +121,31 @@ public class CartEndpoint extends org.broadleafcommerce.core.web.api.endpoint.or
     }
     
     MergeCartResponse mergedOrder = extendOrderService.mergeOrder(customer, guestOrderId, true);
+    mergedOrder.getOrder().setCustomer(customer);
+    CartState.setCart(mergedOrder.getOrder());
+    
+    
+    List<Order> namedOrders = orderService.findOrdersForCustomer(customer,OrderStatus.NAMED);
+    for(Order namedOrder : namedOrders){
+    	
+    	List<OrderItem> items = new ArrayList<OrderItem>(namedOrder.getOrderItems());
+        for (OrderItem item : items) {
+        	orderService.removeItem(namedOrder.getId(), item.getId(), false);
+            
+            OrderItemRequestDTO orderItemRequest = orderItemService.buildOrderItemRequestDTOFromOrderItem(item);
+            mergedOrder.setOrder(orderService.addItem(mergedOrder.getOrder().getId(), orderItemRequest, true));
+        }
+        
+        orderService.cancelOrder(namedOrder);
+    	
+    	
+    	
+//    	orderService.addAllItemsFromNamedOrder(namedOrder, true);
+//    	for(OrderItem item : namedOrder.getOrderItems()){
+//    		mergedOrder.getOrder().addOrderItem(item);
+//    	}
+    }
+    orderService.save(mergedOrder.getOrder(), true, true);
     OrderWrapper wrapper = (OrderWrapper) context.getBean(OrderWrapper.class.getName());
     wrapper.wrapDetails(mergedOrder.getOrder(), request);
 
