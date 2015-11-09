@@ -145,23 +145,23 @@ public class CheckoutEndpoint extends
           address = (ExtendAddress) fulfillment.getAddress();
         }
         // Get the required FedEx Details from ShipWebServiceClient and RateWebServiceClient
-        OrderTrackingInfo orderTrackingInfo = ShipWebServiceClient.getShipWebService(address);
-        RateWebService rateWebService = RateWebServiceClient.getFedexServiceRates(/* address */);
+//        OrderTrackingInfo orderTrackingInfo = ShipWebServiceClient.getShipWebService(address);
+//        RateWebService rateWebService = RateWebServiceClient.getFedexServiceRates(/* address */);
         // Set the FedEx details in the order Tracking information
-        orderTrackingInfo.setDeliveryDate(rateWebService.getDeliveryDate());
-        orderTrackingInfo.setRateServiceMessage(rateWebService.getRateServiceMessage());
-        orderTrackingInfo.setRateServiceSeverity(rateWebService.getRateServiceSeverity());
+//        orderTrackingInfo.setDeliveryDate(rateWebService.getDeliveryDate());
+//        orderTrackingInfo.setRateServiceMessage(rateWebService.getRateServiceMessage());
+//        orderTrackingInfo.setRateServiceSeverity(rateWebService.getRateServiceSeverity());
 
-        if (orderTrackingInfo.getShippingSeverity() == "SUCCESS"
-            && orderTrackingInfo.getRateServiceSeverity() == "SUCCESS") {
-          FedExOrderService fedExOrderService =
-              (FedExOrderService) context.getBean("blFedExOrderService");
-          orderTrackingInfo.setOrderId(cart.getId());
+//        if (orderTrackingInfo.getShippingSeverity() == "SUCCESS"){
+//            && orderTrackingInfo.getRateServiceSeverity() == "SUCCESS") {
+//          FedExOrderService fedExOrderService =
+//              (FedExOrderService) context.getBean("blFedExOrderService");
+//          orderTrackingInfo.setOrderId(cart.getId());
           // Save the FedEx order information
-          orderTrackingInfo = fedExOrderService.saveOrder(orderTrackingInfo);
-          FedExTrackingWrapper fedexwrapper =
-              (FedExTrackingWrapper) context.getBean(FedExTrackingWrapper.class.getName());
-          fedexwrapper.wrapDetails(orderTrackingInfo, request);
+//          orderTrackingInfo = fedExOrderService.saveOrder(orderTrackingInfo);
+//          FedExTrackingWrapper fedexwrapper =
+//              (FedExTrackingWrapper) context.getBean(FedExTrackingWrapper.class.getName());
+//          fedexwrapper.wrapDetails(orderTrackingInfo, request);
           // Perform check out process
           CheckoutResponse response = checkoutService.performCheckout(cart);
           // Get order and wrap it
@@ -174,14 +174,19 @@ public class CheckoutEndpoint extends
           ExtendEmailService emailService =
               (ExtendEmailService) context.getBean("extendEmailService");
           try {
-            emailService.sendOrderConfirmation(order, orderTrackingInfo, address.getPrimaryEmail());
-            emailService.sendOrderConfirmationAdmin(order, orderTrackingInfo,
-                "jharana.v@beautifulyears.com");
+//            emailService.sendOrderConfirmation(order, orderTrackingInfo, address.getPrimaryEmail());
+        	  if(null != address.getPrimaryEmail()){
+        		  emailService.sendOrderConfirmation(order, null, address.getPrimaryEmail());
+        	  }
+//            emailService.sendOrderConfirmationAdmin(order, orderTrackingInfo,
+//                "jharana.v@beautifulyears.com");
+            emailService.sendOrderConfirmationAdmin(order, null,
+                    "jharana.v@beautifulyears.com");
           } catch (IOException e) {
             e.printStackTrace();
           }
           return wrapper;
-        }
+//        }
       } catch (CheckoutException e) {
         throw BroadleafWebServicesException.build(
             Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).addMessage(

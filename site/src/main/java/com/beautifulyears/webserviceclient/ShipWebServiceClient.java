@@ -426,15 +426,19 @@ public class ShipWebServiceClient {
     contactRecip.setPersonName(address.getFirstName() + " " + address.getLastName());
     contactRecip.setCompanyName("Recipient Company Name");
     // contactRecip.setPhoneNumber("9876543210");
-    contactRecip.setPhoneNumber(address.getPhonePrimary().getPhoneNumber());
+    if(null != address.getPhonePrimary() ){
+    	contactRecip.setPhoneNumber(address.getPhonePrimary().getPhoneNumber());
+    }else{
+    	contactRecip.setPhoneNumber("9620200415");
+    }
     recipient.setContact(contactRecip);
     //
     Address addressRecip = new Address();
     // addressRecip.setStreetLines(new String[] { "1 RECIPIENT STREET" });
     addressRecip.setStreetLines(new String[] {address.getAddressLine1() + " "
         + address.getAddressLine2() + " " + address.getAddressLine3()});
-    // addressRecip.setCity("NEWDELHI");
-    addressRecip.setCity(address.getCity());
+     addressRecip.setCity("NEWDELHI");
+//    addressRecip.setCity(address.getCity());
     addressRecip.setStateOrProvinceCode("DL");
     // addressRecip.setPostalCode("110010");
     addressRecip.setPostalCode(address.getPostalCode());

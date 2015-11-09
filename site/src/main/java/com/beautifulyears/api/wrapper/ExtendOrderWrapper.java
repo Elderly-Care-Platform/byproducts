@@ -173,16 +173,16 @@ public class ExtendOrderWrapper extends OrderWrapper implements APIUnwrapper<Ord
       }
     }
 
-    if (model.getStatus() != OrderStatus.IN_PROCESS) {
-      // To append the FedEx information to the response of Order Checkout
-      FedExOrderService fedExOrderService =
-          (FedExOrderService) context.getBean("blFedExOrderService");
-      OrderTrackingInfo orderTrackingInfo = fedExOrderService.findOrderByOrderId(this.id);
-      FedExTrackingWrapper fedexwrapper =
-          (FedExTrackingWrapper) context.getBean(FedExTrackingWrapper.class.getName());
-      fedexwrapper.wrapDetails(orderTrackingInfo, request);
-      this.trackingInfo = fedexwrapper;
-    }
+//    if (model.getStatus() != OrderStatus.IN_PROCESS) {
+//      // To append the FedEx information to the response of Order Checkout
+//      FedExOrderService fedExOrderService =
+//          (FedExOrderService) context.getBean("blFedExOrderService");
+//      OrderTrackingInfo orderTrackingInfo = fedExOrderService.findOrderByOrderId(this.id);
+//      FedExTrackingWrapper fedexwrapper =
+//          (FedExTrackingWrapper) context.getBean(FedExTrackingWrapper.class.getName());
+//      fedexwrapper.wrapDetails(orderTrackingInfo, request);
+//      this.trackingInfo = fedexwrapper;
+//    }
   }
 
   /*

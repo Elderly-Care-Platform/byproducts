@@ -95,6 +95,7 @@ public class CustomRestApiFilter extends GenericFilterBean implements Ordered {
 				// customerService.readCustomerById(Long.valueOf(customerId));
 				String obj = RestCallHandler
 						.query("http://localhost:8080/api/v1/users/getUserInfoByIdForProducts?id="+sessionId);
+//						.query("http://dev.beautifulyears.com:8083/products/api/v1/users/getUserInfoByIdForProducts?id="+sessionId);
 				System.out.println(obj);
 				ExtendCustomer existingCustomer = null;
 				try {
