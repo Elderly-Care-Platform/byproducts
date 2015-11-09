@@ -1,5 +1,8 @@
 package com.beautifulyears.sample.profile.domain;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
@@ -55,5 +58,22 @@ public class ExtendAddressImpl extends AddressImpl implements ExtendAddress {
   public void setSecondaryEmail(String secondaryEmail) {
     this.secondaryEmail = secondaryEmail;
   }
+
+@Override
+public Map<String, String> getAddressMap() {
+	Map<String, String> addressMap = new HashMap<String, String>();
+	addressMap.put("AddressLine1", this.getAddressLine1());
+	addressMap.put("AddressLine2", this.getAddressLine2());
+	addressMap.put("City", this.getCity());
+	addressMap.put("Country", this.getCounty());
+	addressMap.put("Email", this.getEmailAddress());
+	if(null != this.getPhonePrimary()){
+		addressMap.put("Phone", this.getPhonePrimary().toString());
+	}
+	return addressMap;
+}
+
+  
+  
 
 }

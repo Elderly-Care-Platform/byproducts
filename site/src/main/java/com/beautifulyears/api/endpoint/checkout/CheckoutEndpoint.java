@@ -15,7 +15,9 @@
 package com.beautifulyears.api.endpoint.checkout;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
@@ -33,6 +35,8 @@ import org.broadleafcommerce.core.checkout.service.exception.CheckoutException;
 import org.broadleafcommerce.core.checkout.service.workflow.CheckoutResponse;
 import org.broadleafcommerce.core.order.domain.FulfillmentGroup;
 import org.broadleafcommerce.core.order.domain.Order;
+import org.broadleafcommerce.core.order.domain.OrderAttribute;
+import org.broadleafcommerce.core.order.domain.OrderAttributeImpl;
 import org.broadleafcommerce.core.web.api.BroadleafWebServicesException;
 import org.broadleafcommerce.core.web.api.wrapper.OrderPaymentWrapper;
 import org.broadleafcommerce.core.web.api.wrapper.OrderWrapper;
@@ -163,6 +167,25 @@ public class CheckoutEndpoint extends
 //              (FedExTrackingWrapper) context.getBean(FedExTrackingWrapper.class.getName());
 //          fedexwrapper.wrapDetails(orderTrackingInfo, request);
           // Perform check out process
+        
+        OrderAttribute addressAttribute = new OrderAttributeImpl();
+        Map<String, OrderAttribute>  attributeMap;
+        if(null != order.getOrderAttributes()){
+        	attributeMap = order.getOrderAttributes();
+        }else{
+        	attributeMap = new HashMap<String, OrderAttribute>();
+        }
+       Map<String, String> addressMap = address.getAddressMap();
+        for (String key : addressMap.keySet()) {
+	        addressAttribute.setName(key);
+	        addressAttribute.setValue(addressMap.get(key));
+	        addressAttribute.setOrder(order);
+	        attributeMap.put(key, addressAttribute);
+        }
+        order.setOrderAttributes(attributeMap);
+        
+        
+        
           CheckoutResponse response = checkoutService.performCheckout(cart);
           // Get order and wrap it
           order = response.getOrder();
