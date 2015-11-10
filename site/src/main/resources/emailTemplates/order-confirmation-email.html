@@ -3,7 +3,6 @@
   <body background="#FFFFFF">
   	Hi,
   	Thanks for your order!
-  	You can check the status of your order 
     <!-- a th:href="@{https://www.fedex.com/apps/fedextrack/(action='track', trackingnumber=${orderTrackingInfo.trackingNumber})}" target="_blank"><span th:text="${orderTrackingInfo.trackingNumber}"></span></a> -->
     
   	<br></br>
@@ -42,5 +41,7 @@
   		<span>Order Payment:</span>
   		<span th:text="${order.total}"></span>
   	</div>
+  	
+  	For any assistance with your order please call us at <a href="tel:08069400333">080-6940-0333</a> or email us at <a href="mailto:writetous@beautifulyears.com">writetous@beautifulyears.com</a>.
   </body>
 </html>

@@ -168,7 +168,7 @@ public class CheckoutEndpoint extends
 //          fedexwrapper.wrapDetails(orderTrackingInfo, request);
           // Perform check out process
         
-        OrderAttribute addressAttribute = new OrderAttributeImpl();
+        
         Map<String, OrderAttribute>  attributeMap;
         if(null != order.getOrderAttributes()){
         	attributeMap = order.getOrderAttributes();
@@ -177,6 +177,7 @@ public class CheckoutEndpoint extends
         }
        Map<String, String> addressMap = address.getAddressMap();
         for (String key : addressMap.keySet()) {
+        	OrderAttribute addressAttribute = new OrderAttributeImpl();
 	        addressAttribute.setName(key);
 	        addressAttribute.setValue(addressMap.get(key));
 	        addressAttribute.setOrder(order);
