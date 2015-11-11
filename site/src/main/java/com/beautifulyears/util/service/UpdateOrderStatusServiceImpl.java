@@ -1,6 +1,7 @@
 package com.beautifulyears.util.service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -47,7 +48,8 @@ public class UpdateOrderStatusServiceImpl implements UpdateOrderStatusService {
   @Override
   public void updateOrderStatus() {
 
-    List<Order> orders = extendOrderService.findOrderByStatus(OrderStatus.SUBMITTED);
+//    List<Order> orders = extendOrderService.findOrderByStatus(OrderStatus.SUBMITTED);
+	  List<Order> orders = new ArrayList<Order>();//adding to disable the order updation : nnja
 
     // Implement fedex here
     for (Order order : orders) {

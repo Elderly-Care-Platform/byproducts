@@ -62,13 +62,15 @@ public class ExtendAddressImpl extends AddressImpl implements ExtendAddress {
 @Override
 public Map<String, String> getAddressMap() {
 	Map<String, String> addressMap = new HashMap<String, String>();
+	addressMap.put("firstName", this.getFirstName());
+	addressMap.put("lastName", this.getLastName());
 	addressMap.put("AddressLine1", this.getAddressLine1());
 	addressMap.put("AddressLine2", this.getAddressLine2());
 	addressMap.put("City", this.getCity());
-	addressMap.put("Country", this.getCounty());
-	addressMap.put("Email", this.getEmailAddress());
+//	addressMap.put("Country", this.getCounty());
+	addressMap.put("Email", this.getPrimaryEmail());
 	if(null != this.getPhonePrimary()){
-		addressMap.put("Phone", this.getPhonePrimary().toString());
+		addressMap.put("Phone", this.getPhonePrimary().getPhoneNumber());
 	}
 	return addressMap;
 }
