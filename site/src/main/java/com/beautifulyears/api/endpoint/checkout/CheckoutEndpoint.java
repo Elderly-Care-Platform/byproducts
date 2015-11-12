@@ -44,6 +44,7 @@ import org.broadleafcommerce.core.web.order.CartState;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.beautifulyears.BYConstants;
 import com.beautifulyears.api.wrapper.ExtendOrderPaymentWrapper;
 import com.beautifulyears.api.wrapper.ExtendOrderWrapper;
 import com.beautifulyears.api.wrapper.FedExTrackingWrapper;
@@ -204,8 +205,11 @@ public class CheckoutEndpoint extends
         	  }
 //            emailService.sendOrderConfirmationAdmin(order, orderTrackingInfo,
 //                "jharana.v@beautifulyears.com");
-            emailService.sendOrderConfirmationAdmin(order, null,
-                    "jharana.v@beautifulyears.com");
+        	  for(String adminEmail : BYConstants.ADMIN_EMAILS){
+        		  emailService.sendOrderConfirmationAdmin(order, null,
+        				  adminEmail);
+        	  }
+            
           } catch (IOException e) {
             e.printStackTrace();
           }
