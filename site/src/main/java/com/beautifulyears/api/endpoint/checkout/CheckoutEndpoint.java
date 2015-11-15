@@ -47,14 +47,8 @@ import org.springframework.stereotype.Component;
 import com.beautifulyears.BYConstants;
 import com.beautifulyears.api.wrapper.ExtendOrderPaymentWrapper;
 import com.beautifulyears.api.wrapper.ExtendOrderWrapper;
-import com.beautifulyears.api.wrapper.FedExTrackingWrapper;
-import com.beautifulyears.domain.fedex.RateWebService;
-import com.beautifulyears.sample.fedExOrder.domain.OrderTrackingInfo;
 import com.beautifulyears.sample.profile.domain.ExtendAddress;
 import com.beautifulyears.service.email.ExtendEmailService;
-import com.beautifulyears.service.fedExOrder.FedExOrderService;
-import com.beautifulyears.webserviceclient.RateWebServiceClient;
-import com.beautifulyears.webserviceclient.ShipWebServiceClient;
 
 /**
  * This endpoint provides rest for checkout.

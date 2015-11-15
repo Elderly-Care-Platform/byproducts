@@ -13,8 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.broadleafcommerce.profile.core.domain.Customer;
-import org.broadleafcommerce.profile.core.domain.CustomerImpl;
-import org.broadleafcommerce.profile.core.service.CustomerService;
 import org.broadleafcommerce.profile.web.core.CustomerState;
 import org.broadleafcommerce.profile.web.core.security.CustomerStateRequestProcessor;
 import org.broadleafcommerce.profile.web.core.security.RestApiCustomerStateFilter;
@@ -23,11 +21,12 @@ import org.codehaus.jettison.json.JSONObject;
 import org.springframework.core.Ordered;
 import org.springframework.web.filter.GenericFilterBean;
 
+import util.RestCallHandler;
+
+import com.beautifulyears.BYConstants;
 import com.beautifulyears.sample.profile.domain.ExtendCustomer;
 import com.beautifulyears.sample.profile.domain.ExtendCustomerImpl;
 import com.beautifulyears.service.customer.ExtendCustomerService;
-
-import util.RestCallHandler;
 
 public class CustomRestApiFilter extends GenericFilterBean implements Ordered {
 
@@ -94,8 +93,7 @@ public class CustomRestApiFilter extends GenericFilterBean implements Ordered {
 				// Customer customer =
 				// customerService.readCustomerById(Long.valueOf(customerId));
 				String obj = RestCallHandler
-						.query("http://localhost:8080/api/v1/users/getUserInfoByIdForProducts?id="+sessionId);
-//						.query("http://beautifulyears.com/api/v1/users/getUserInfoByIdForProducts?id="+sessionId);
+						.query(BYConstants.SITE_URL+"/api/v1/users/getUserInfoByIdForProducts?id="+sessionId);
 				System.out.println(obj);
 				ExtendCustomer existingCustomer = null;
 				try {

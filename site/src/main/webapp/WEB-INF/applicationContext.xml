@@ -89,7 +89,7 @@
 
 	<bean id="updateOrderStatusTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
 		<property name="jobDetail" ref="updateOrderStatusJobDetail" />
-		<property name="cronExpression" value="0 0/15 * 1/1 * ? *" />
+		<property name="cronExpression" value="0 0/30 * 1/1 * ? *" />
 	</bean>
 
 	<!--<bean id="purgeCartConfig" class="org.springframework.beans.factory.config.MapFactoryBean"> -->
@@ -195,10 +195,30 @@
 			<list>
 				<ref bean="rebuildIndexTrigger" />
 				<ref bean="updateOrderStatusTrigger" />
+				<ref bean="updatePinCodeTrigger" />
 				<!--<ref bean="purgeCustomerTrigger" /> -->
 			</list>
 		</property>
 	</bean>
+	
+	
+	<!-- for updating the pin codes from logistic site daily -->
+	<bean id="updatePinCodeJobDetail" class="org.springframework.scheduling.quartz.JobDetailBean">
+		<property name="jobClass"
+			value="com.beautifulyears.service.logistic.pincode.UpdatePincodeJob" />
+		<property name="jobDataAsMap">
+			<map>
+				<entry key="pincodeService" value-ref="blPincodeService" />
+			</map>
+		</property>
+	</bean>
+	
+	<bean id="updatePinCodeTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="updatePinCodeJobDetail" />
+		<property name="cronExpression" value="0 55 23 * * ? *" />
+	</bean>
+	
+	
 
 	<!-- Broaldeaf Commerce comes with an Image Server that allows you to manipulate 
 		images. For example, the demo includes a high resolution image for each product 
@@ -330,6 +350,18 @@
 		scope="prototype" />
 		
 	<bean id="blCustomerDao" class="com.beautifulyears.dao.customer.ExtendCustomerDaoImpl"
+		scope="prototype" />
+		
+	<bean id="blPincodeService" class="com.beautifulyears.service.logistic.pincode.PincodeServiceImpl"
+		scope="prototype" />
+		
+	<bean id="blPincodeDao" class="com.beautifulyears.dao.logistic.pincode.PincodeDaoImpl"
+		scope="prototype" />
+		
+	<bean id="blAwbService" class="com.beautifulyears.service.logistic.awb.AwbServiceImpl"
+		scope="prototype" />
+		
+	<bean id="blAwbDao" class="com.beautifulyears.dao.logistic.awb.AwbDaolmpl"
 		scope="prototype" />
 
 	<bean id="blFedExOrderService"
