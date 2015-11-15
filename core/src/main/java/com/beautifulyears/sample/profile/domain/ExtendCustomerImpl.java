@@ -23,7 +23,7 @@ public class ExtendCustomerImpl extends CustomerImpl implements ExtendCustomer {
 	private static final long serialVersionUID = 1L;
 	
 	@Column(name = "CUSTOM_USER_ID")
-	@AdminPresentation(friendlyName = "Customer UserId")
+	@AdminPresentation(friendlyName = "BY UserId",readOnly = true)
 	public String customUserId;
 
 	@Override
