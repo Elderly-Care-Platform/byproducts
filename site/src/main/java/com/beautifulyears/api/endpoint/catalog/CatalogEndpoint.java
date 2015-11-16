@@ -205,6 +205,33 @@ public class CatalogEndpoint extends
     }
     return out;
   }
+  
+  /**
+   * Get Count of all active products, excluding products which are in deleted category
+   * 
+   * @param request
+   * @param productLimit
+   * @param productOffset
+   * @return
+   */
+  @GET
+  @Path("productCount")
+  public Integer getAllActiveProductsCount(@Context HttpServletRequest request
+      ) {
+    logger.debug("Executing method : getAllActiveProductsCount()");
+
+    List<Category> categoryList = catalogService.findAllCategories();
+    List<Category> categoryActiveList = getAllActiveCategories(categoryList);
+    List<Product> products = new ArrayList<Product>();
+    for (Category category : categoryActiveList) {
+      List<Product> Catproducts = catalogService.findActiveProductsByCategory(category);
+      if (Catproducts != null) {
+        products.addAll(Catproducts);
+      }
+    }
+
+    return products.size();
+  }
 
   /**
    * This method is used to get featured product list
