@@ -397,6 +397,9 @@
 		
 	<bean id="blExtendOrderService" class="com.beautifulyears.service.order.ExtendOrderServiceImpl"
 		scope="prototype" />
+	
+	<bean id="blLogisticCheckoutService" class="com.beautifulyears.service.logistic.checkOut.LogisticCheckOutServiceImpl"
+		scope="prototype" />
 		
 	<bean id="blExtendOrderDao" class="com.beautifulyears.dao.order.ExtendOrderDaoImpl"
 		scope="prototype" />

@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -37,6 +38,7 @@ import org.broadleafcommerce.core.order.domain.FulfillmentGroup;
 import org.broadleafcommerce.core.order.domain.Order;
 import org.broadleafcommerce.core.order.domain.OrderAttribute;
 import org.broadleafcommerce.core.order.domain.OrderAttributeImpl;
+import org.broadleafcommerce.core.pricing.service.exception.PricingException;
 import org.broadleafcommerce.core.web.api.BroadleafWebServicesException;
 import org.broadleafcommerce.core.web.api.wrapper.OrderPaymentWrapper;
 import org.broadleafcommerce.core.web.api.wrapper.OrderWrapper;
@@ -49,6 +51,7 @@ import com.beautifulyears.api.wrapper.ExtendOrderPaymentWrapper;
 import com.beautifulyears.api.wrapper.ExtendOrderWrapper;
 import com.beautifulyears.sample.profile.domain.ExtendAddress;
 import com.beautifulyears.service.email.ExtendEmailService;
+import com.beautifulyears.service.logistic.checkOut.LogisticCheckOutService;
 
 /**
  * This endpoint provides rest for checkout.
@@ -65,6 +68,9 @@ public class CheckoutEndpoint extends
     org.broadleafcommerce.core.web.api.endpoint.checkout.CheckoutEndpoint {
 
   final static Logger logger = Logger.getLogger(CheckoutEndpoint.class);
+  
+  @Resource(name = "blLogisticCheckoutService")
+	protected LogisticCheckOutService logisticCheckoutService;
 
   /*
    * This method is used to get payment details for order
@@ -123,12 +129,13 @@ public class CheckoutEndpoint extends
    * @param request
    * @param orderWrapper
    * @return
+ * @throws PricingException 
    * 
    */
 
   @POST
   public OrderWrapper performCheckout(@Context HttpServletRequest request,
-      ExtendOrderWrapper orderWrapper) {
+      ExtendOrderWrapper orderWrapper) throws PricingException {
     logger.debug("Executing method : performCheckout()");
     // Get the cart
     Order cart = CartState.getCart();
@@ -183,8 +190,9 @@ public class CheckoutEndpoint extends
         
         
           CheckoutResponse response = checkoutService.performCheckout(cart);
+          CheckoutResponse response1 = logisticCheckoutService.checkOut(cart);
           // Get order and wrap it
-          order = response.getOrder();
+          order = response1.getOrder();
           ExtendOrderWrapper wrapper =
               (ExtendOrderWrapper) context.getBean(ExtendOrderWrapper.class.getName());
           wrapper.wrapDetails(order, request);
@@ -192,21 +200,18 @@ public class CheckoutEndpoint extends
           // Send confirmation mail
           ExtendEmailService emailService =
               (ExtendEmailService) context.getBean("extendEmailService");
-          try {
-//            emailService.sendOrderConfirmation(order, orderTrackingInfo, address.getPrimaryEmail());
-        	  if(null != address.getPrimaryEmail()){
-        		  emailService.sendOrderConfirmation(order, null, address.getPrimaryEmail());
-        	  }
-//            emailService.sendOrderConfirmationAdmin(order, orderTrackingInfo,
-//                "jharana.v@beautifulyears.com");
-        	  for(String adminEmail : BYConstants.ADMIN_EMAILS){
-        		  emailService.sendOrderConfirmationAdmin(order, null,
-        				  adminEmail);
-        	  }
-            
-          } catch (IOException e) {
-            e.printStackTrace();
-          }
+//          try {
+//        	  if(null != address.getPrimaryEmail()){
+//        		  emailService.sendOrderConfirmation(order, null, address.getPrimaryEmail());
+//        	  }
+//        	  for(String adminEmail : BYConstants.ADMIN_EMAILS){
+//        		  emailService.sendOrderConfirmationAdmin(order, null,
+//        				  adminEmail);
+//        	  }
+//            
+//          } catch (IOException e) {
+//            e.printStackTrace();
+//          }
           return wrapper;
 //        }
       } catch (CheckoutException e) {

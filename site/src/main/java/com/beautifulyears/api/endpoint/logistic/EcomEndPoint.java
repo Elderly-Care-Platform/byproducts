@@ -10,6 +10,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
@@ -43,5 +44,12 @@ public class EcomEndPoint {
 	    logger.debug("Executing method : findCartForCustomer()");
 	    PincodeImpl pincodeImpl =  pincodeService.find(pincode);
 	    return pincodeImpl;
+	  }
+	  
+	  @GET
+	  @Path("track")
+	  public void track(@Context HttpServletRequest request,
+			  @QueryParam("awb") String awb) {
+	    logger.debug("Executing method : track()");
 	  }
 }

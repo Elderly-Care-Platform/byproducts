@@ -3,7 +3,10 @@
  */
 package com.beautifulyears.service.logistic.checkOut;
 
+import org.broadleafcommerce.core.checkout.service.exception.CheckoutException;
+import org.broadleafcommerce.core.checkout.service.workflow.CheckoutResponse;
 import org.broadleafcommerce.core.order.domain.Order;
+import org.broadleafcommerce.core.pricing.service.exception.PricingException;
 
 /**
  * @author Nitin
@@ -11,6 +14,6 @@ import org.broadleafcommerce.core.order.domain.Order;
  */
 public interface LogisticCheckOutService {
 	
-	public Order checkOut(Order order);
+	public CheckoutResponse checkOut(Order order) throws PricingException, CheckoutException;
 	
 }
