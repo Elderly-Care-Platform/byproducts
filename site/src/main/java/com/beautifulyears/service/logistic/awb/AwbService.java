@@ -15,4 +15,5 @@ import org.broadleafcommerce.core.order.domain.OrderItem;
 public interface AwbService {
 	public List<String> generate(int count, String type);
 	public boolean placeOrder(Order order, OrderItem item);
+	public Object track(List<String> awbList);
 }

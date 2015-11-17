@@ -33,4 +33,10 @@ public class AwbServiceImpl implements AwbService {
 		return awbDao.placeOrder(order,item);
 	}
 
+	@Override
+	public Object track(List<String> awbList) {
+		return awbDao.track(awbList);
+		
+	}
+
 }

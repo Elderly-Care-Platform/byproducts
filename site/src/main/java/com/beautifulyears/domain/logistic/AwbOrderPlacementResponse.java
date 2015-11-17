@@ -1,42 +1,55 @@
 package com.beautifulyears.domain.logistic;
 
+import java.util.List;
 
 public class AwbOrderPlacementResponse {
-	String reason;
-	String awb;
-	String order_number;
-	boolean success;
+	private List<AwbOrderPlacementResponse.Shipments> shipments;
 
-	public String getReason() {
-		return reason;
+	public List<AwbOrderPlacementResponse.Shipments> getShipments() {
+		return shipments;
 	}
 
-	public void setReason(String reason) {
-		this.reason = reason;
+	public void setShipments(List<AwbOrderPlacementResponse.Shipments> shipments) {
+		this.shipments = shipments;
 	}
 
-	public String getAwb() {
-		return awb;
-	}
+	public static class Shipments {
+		String reason;
+		String awb;
+		String order_number;
+		boolean success;
 
-	public void setAwb(String awb) {
-		this.awb = awb;
-	}
+		public String getReason() {
+			return reason;
+		}
 
-	public String getOrder_number() {
-		return order_number;
-	}
+		public void setReason(String reason) {
+			this.reason = reason;
+		}
 
-	public void setOrder_number(String order_number) {
-		this.order_number = order_number;
-	}
+		public String getAwb() {
+			return awb;
+		}
 
-	public boolean isSuccess() {
-		return success;
-	}
+		public void setAwb(String awb) {
+			this.awb = awb;
+		}
 
-	public void setSuccess(boolean success) {
-		this.success = success;
+		public String getOrder_number() {
+			return order_number;
+		}
+
+		public void setOrder_number(String order_number) {
+			this.order_number = order_number;
+		}
+
+		public boolean isSuccess() {
+			return success;
+		}
+
+		public void setSuccess(boolean success) {
+			this.success = success;
+		}
 	}
 
 }

@@ -3,6 +3,8 @@
  */
 package com.beautifulyears.api.endpoint.logistic;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
@@ -19,6 +21,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.beautifulyears.sample.logistic.domain.PincodeImpl;
+import com.beautifulyears.service.logistic.awb.AwbService;
 import com.beautifulyears.service.logistic.pincode.PincodeService;
 
 /**
@@ -35,6 +38,9 @@ public class EcomEndPoint {
 	@Resource(name = "blPincodeService")
 	protected PincodeService pincodeService;
 	
+	@Resource(name = "blAwbService")
+	protected AwbService awbService;
+	
 	final static Logger logger = Logger.getLogger(EcomEndPoint.class);
 	
 	  @GET
@@ -48,8 +54,11 @@ public class EcomEndPoint {
 	  
 	  @GET
 	  @Path("track")
-	  public void track(@Context HttpServletRequest request,
-			  @QueryParam("awb") String awb) {
-	    logger.debug("Executing method : track()");
+	  public Object track(@Context HttpServletRequest request,
+			  @QueryParam("awb") List<String> awb) {
+		  logger.debug("Executing method : track()");
+		return  awbService.track(awb);
+	    
+	    
 	  }
 }

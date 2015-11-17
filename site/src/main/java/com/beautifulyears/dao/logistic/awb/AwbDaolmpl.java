@@ -6,10 +6,16 @@ package com.beautifulyears.dao.logistic.awb;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.util.List;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -22,6 +28,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 import org.springframework.stereotype.Repository;
 
+import com.beautifulyears.dao.logistic.awb.status.EcomexpressObjects;
 import com.beautifulyears.domain.logistic.AwbOrderPlacementResponse;
 import com.beautifulyears.domain.logistic.AwbResponse;
 
@@ -42,7 +49,6 @@ public class AwbDaolmpl implements AwbDao {
 		String inputStr = (String) postQuery(url, requestBody);
 
 		ObjectMapper mapper = new ObjectMapper();
-		System.out.println(inputStr);
 		AwbResponse awbResponse = null;
 		try {
 			awbResponse = mapper.readValue(inputStr,
@@ -79,7 +85,7 @@ public class AwbDaolmpl implements AwbDao {
 		String url = "http://ecomm.prtouch.com/apiv2/manifest_awb/";
 		String requestBody = "username=ecomexpress"
 				+ "&password=Ke%243c%404oT5m6h%23%24" + "&json_input=[" + "{"
-				+ "\"ACTUAL_WEIGHT\":\"0\"," + "\"AWB_NUMBER\":\""
+				+ "\"ACTUAL_WEIGHT\":\"5\"," + "\"AWB_NUMBER\":\""
 				+ awbNumber
 				+ "\","
 				+ "\"BREADTH\":\"0\","
@@ -106,9 +112,7 @@ public class AwbDaolmpl implements AwbDao {
 				+ "\"MOBILE\":\""
 				+ phone
 				+ "\","
-				+ "\"ORDER_NUMBER\":\""
-				+ order.getOrderNumber()
-				+ "\","
+				+ "\"ORDER_NUMBER\":\"\","
 				+ "\"PICKUP_ADDRESS_LINE1\":\"Samalkha\","
 				+ "\"PICKUP_ADDRESS_LINE2\":\"kapashera\","
 				+ "\"PICKUP_MOBILE\":\"59536\","
@@ -128,7 +132,7 @@ public class AwbDaolmpl implements AwbDao {
 				+ "\"TELEPHONE\":\""
 				+ phone
 				+ "\","
-				+ "\"VOLUMETRIC_WEIGHT\":\"0\"" + "}" + "]";
+				+ "\"VOLUMETRIC_WEIGHT\":\"1\"" + "}" + "]";
 		String inputStr = (String) postQuery(url, requestBody);
 
 		ObjectMapper mapper = new ObjectMapper();
@@ -136,7 +140,7 @@ public class AwbDaolmpl implements AwbDao {
 		AwbOrderPlacementResponse awbResponse = null;
 		try {
 			awbResponse = mapper.readValue(inputStr,
-					new TypeReference<AwbResponse>() {
+					new TypeReference<AwbOrderPlacementResponse>() {
 					});
 		} catch (JsonParseException e) {
 			e.printStackTrace();
@@ -145,7 +149,36 @@ public class AwbDaolmpl implements AwbDao {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return awbResponse.isSuccess();
+		return awbResponse.getShipments().get(0).isSuccess();
+	}
+	
+	@Override
+	public Object track(List<String> awbList) {
+		String delim = "";
+		StringBuffer sb = new StringBuffer();
+		for (String i : awbList) {
+		    sb.append(delim).append(i);
+		    delim = ",";
+		}
+		String url = "http://ecomm.prtouch.com/track_me/api/mawb/?awb="+sb.toString()+"&order=&username=ecomexpress&password=Ke$3c@4oT5m6h%23$";
+		String inputStr = (String) getQuery(url);
+		System.out.println(inputStr);
+		
+		JAXBContext jaxbContext;
+		EcomexpressObjects response = null;
+		try {
+			jaxbContext = JAXBContext.newInstance(EcomexpressObjects.class);
+			StringReader sr = new StringReader(inputStr);
+			Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+			 response = (EcomexpressObjects) unmarshaller.unmarshal(sr);
+			System.out.println(response);
+		} catch (JAXBException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		return response;
 	}
 
 	private Object postQuery(String url, String requestBody) {
@@ -179,6 +212,40 @@ public class AwbDaolmpl implements AwbDao {
 		} finally {
 
 		}
+		System.out.println(inputStr);
+		return inputStr;
+	}
+	
+	private Object getQuery(String url) {
+		CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+		String inputStr = "";
+		try {
+			HttpGet request = new HttpGet(url);
+			request.addHeader("content-type", "application/json");
+			CloseableHttpResponse response1 = httpClient.execute(request);
+			HttpEntity entity1 = response1.getEntity();
+
+			String inputLine;
+
+			BufferedReader br = new BufferedReader(new InputStreamReader(
+					entity1.getContent()));
+			try {
+				while ((inputLine = br.readLine()) != null) {
+					inputStr += inputLine;
+				}
+				br.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			httpClient.close();
+		} catch (Exception ex) {
+			System.out.println("error while updating the pincodes");
+			ex.printStackTrace();
+		} finally {
+
+		}
+		System.out.println(inputStr);
 		return inputStr;
 	}
 
