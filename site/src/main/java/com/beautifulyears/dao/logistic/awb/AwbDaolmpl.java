@@ -20,6 +20,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.broadleafcommerce.core.order.domain.DiscreteOrderItem;
 import org.broadleafcommerce.core.order.domain.Order;
 import org.broadleafcommerce.core.order.domain.OrderItem;
 import org.codehaus.jackson.JsonParseException;
@@ -32,6 +33,9 @@ import com.beautifulyears.BYConstants;
 import com.beautifulyears.dao.logistic.awb.status.EcomexpressObjects;
 import com.beautifulyears.domain.logistic.AwbOrderPlacementResponse;
 import com.beautifulyears.domain.logistic.AwbResponse;
+import com.beautifulyears.sample.catalog.domain.ExtendProductImpl;
+import com.beautifulyears.sample.config.PickUpAddressConfig;
+import com.beautifulyears.sample.profile.domain.ExtendAddressImpl;
 
 /**
  * @author Nitin
@@ -84,6 +88,20 @@ public class AwbDaolmpl implements AwbDao {
 		String phone = order.getOrderAttributes().get("Phone").getValue();
 		String orderType = order.getOrderAttributes().get("deliveryType")
 				.getValue();
+		ExtendAddressImpl pickupAddress = null;
+
+		if (item instanceof DiscreteOrderItem
+				&& null != ((DiscreteOrderItem) item).getProduct()
+				&& ((DiscreteOrderItem) item).getProduct() instanceof ExtendProductImpl
+				&& !((ExtendProductImpl) ((DiscreteOrderItem) item)
+						.getProduct()).getPickupAddressCode().isEmpty()) {
+			pickupAddress = PickUpAddressConfig.PICKUP_ADDRESS_MAP
+					.get(((ExtendProductImpl) ((DiscreteOrderItem) item)
+							.getProduct()).getPickupAddressCode());
+		} else {
+			pickupAddress = PickUpAddressConfig.PICKUP_ADDRESS_MAP
+					.get(PickUpAddressConfig.SELF.getType());
+		}
 
 		String url = BYConstants.LOGISTIC_API + "/apiv2/manifest_awb/";
 		String requestBody = "username=" + BYConstants.LOGISTIC_USERNAME
@@ -99,19 +117,29 @@ public class AwbDaolmpl implements AwbDao {
 				+ "\"DESTINATION_CITY\":\"MUMBAI\"," + "\"HEIGHT\":\"0\","
 				+ "\"ITEM_DESCRIPTION\":\"\"," + "\"LENGTH\":\" 0\","
 				+ "\"MOBILE\":\"" + phone + "\"," + "\"ORDER_NUMBER\":\"\","
-				+ "\"PICKUP_ADDRESS_LINE1\":\"Samalkha\","
-				+ "\"PICKUP_ADDRESS_LINE2\":\"kapashera\","
-				+ "\"PICKUP_MOBILE\":\"59536\"," + "\"PICKUP_NAME\":\"abcde\","
-				+ "\"PICKUP_PHONE\":\"98204\","
-				+ "\"PICKUP_PINCODE\":\"110013\"," + "\"PIECES\":\"1\","
-				+ "\"PINCODE\":\"400067\"," + "\"PRODUCT\":\"" + orderType
-				+ "\"," + "\"RETURN_ADDRESS_LINE1\":\"Samalkha\","
-				+ "\"RETURN_ADDRESS_LINE2\":\"kapashera\","
-				+ "\"RETURN_MOBILE\":\"59536\"," + "\"RETURN_NAME\":\"abcde\","
-				+ "\"RETURN_PHONE\":\"98204\","
-				+ "\"RETURN_PINCODE\":\"110013\"," + "\"STATE\":\"MH\","
-				+ "\"TELEPHONE\":\"" + phone + "\","
+				+ "\"PICKUP_ADDRESS_LINE1\":\""
+				+ pickupAddress.getAddressLine1() + "\","
+				+ "\"PICKUP_ADDRESS_LINE2\":\""
+				+ pickupAddress.getAddressLine2() + "\","
+				+ "\"PICKUP_MOBILE\":\"" + pickupAddress.getPhonePrimary().getPhoneNumber()
+				+ "\"," + "\"PICKUP_NAME\":\"" + pickupAddress.getFirstName()
+				+ "\"," + "\"PICKUP_PHONE\":\""
+				+ pickupAddress.getPhonePrimary().getPhoneNumber() + "\","
+				+ "\"PICKUP_PINCODE\":\"" + pickupAddress.getPostalCode()
+				+ "\"," + "\"PIECES\":\"1\"," + "\"PINCODE\":\"400067\","
+				+ "\"PRODUCT\":\"" + orderType + "\","
+				+ "\"RETURN_ADDRESS_LINE1\":\""
+				+ pickupAddress.getAddressLine1() + "\","
+				+ "\"RETURN_ADDRESS_LINE2\":\""
+				+ pickupAddress.getAddressLine2() + "\","
+				+ "\"RETURN_MOBILE\":\"" + pickupAddress.getPhonePrimary().getPhoneNumber()
+				+ "\"," + "\"RETURN_NAME\":\"abcde\"," + "\"RETURN_PHONE\":\""
+				+ pickupAddress.getPhonePrimary() + "\","
+				+ "\"RETURN_PINCODE\":\"" + pickupAddress.getPostalCode()
+				+ "\"," + "\"STATE\":\"" + pickupAddress.getState().getName()
+				+ "\"," + "\"TELEPHONE\":\"" + phone + "\","
 				+ "\"VOLUMETRIC_WEIGHT\":\"1\"" + "}" + "]";
+		System.out.println(requestBody);
 		String inputStr = (String) postQuery(url, requestBody);
 
 		ObjectMapper mapper = new ObjectMapper();

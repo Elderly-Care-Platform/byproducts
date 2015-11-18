@@ -46,4 +46,8 @@ public interface ExtendProduct {
 
   void setCashOnDelivery(Boolean cashOnDelivery);
 
+String getPickupAddressCode();
+
+void setPickupAddressCode(String pickupAddressCode);
+
 }

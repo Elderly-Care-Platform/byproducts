@@ -200,18 +200,18 @@ public class CheckoutEndpoint extends
           // Send confirmation mail
           ExtendEmailService emailService =
               (ExtendEmailService) context.getBean("extendEmailService");
-//          try {
-//        	  if(null != address.getPrimaryEmail()){
-//        		  emailService.sendOrderConfirmation(order, null, address.getPrimaryEmail());
-//        	  }
-//        	  for(String adminEmail : BYConstants.ADMIN_EMAILS){
-//        		  emailService.sendOrderConfirmationAdmin(order, null,
-//        				  adminEmail);
-//        	  }
-//            
-//          } catch (IOException e) {
-//            e.printStackTrace();
-//          }
+          try {
+        	  if(null != address.getPrimaryEmail()){
+        		  emailService.sendOrderConfirmation(order, null, address.getPrimaryEmail());
+        	  }
+        	  for(String adminEmail : BYConstants.ADMIN_EMAILS){
+        		  emailService.sendOrderConfirmationAdmin(order, null,
+        				  adminEmail);
+        	  }
+            
+          } catch (IOException e) {
+            e.printStackTrace();
+          }
           return wrapper;
 //        }
       } catch (CheckoutException e) {

@@ -60,6 +60,9 @@ public class ExtendProductWrapper extends ProductWrapper {
 
   @XmlElement
   private Boolean cashOnDelivery;
+  
+  @XmlElement
+  private String pickupAddressCode;
 
   @XmlElement
   private List<ExtendProductCODWrapper> productCashOnDeliveryPincode =
@@ -118,6 +121,10 @@ public class ExtendProductWrapper extends ProductWrapper {
       if (((ExtendProductImpl) model).getProductDeliveryCharges() != null) {
         this.productDeliveryCharges = ((ExtendProductImpl) model).getProductDeliveryCharges();
       }
+      
+      if (((ExtendProductImpl) model).getPickupAddressCode() != null) {
+          this.pickupAddressCode = ((ExtendProductImpl) model).getPickupAddressCode();
+        }
 
       this.cashOnDelivery = ((ExtendProductImpl) model).getCashOnDelivery();
 
