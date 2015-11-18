@@ -20,6 +20,7 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
+import com.beautifulyears.BYConstants;
 import com.beautifulyears.sample.logistic.domain.PincodeImpl;
 
 /**
@@ -56,10 +57,11 @@ public class UpdatePincodeJob extends QuartzJobBean {
 
 		try {
 
-			HttpPost request = new HttpPost(
-					"http://ecomm.prtouch.com/apiv2/pincodes/");
-			StringEntity params = new StringEntity(
-					"username=ecomexpress&password=Ke%243c%404oT5m6h%23%24");
+			HttpPost request = new HttpPost(BYConstants.LOGISTIC_API
+					+ "/apiv2/pincodes/");
+			StringEntity params = new StringEntity("username="
+					+ BYConstants.LOGISTIC_USERNAME + "&password="
+					+ BYConstants.LOGISTIC_PASSWORD);
 			request.addHeader("content-type", "application/json");
 			request.setEntity(params);
 			CloseableHttpResponse response1 = httpClient.execute(request);
