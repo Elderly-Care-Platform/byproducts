@@ -190,6 +190,7 @@ public class CheckoutEndpoint extends
         
         
           CheckoutResponse response = checkoutService.performCheckout(cart);
+          System.out.println("System checkout done completely..trying out logistic checkout");
           CheckoutResponse response1 = logisticCheckoutService.checkOut(cart);
           // Get order and wrap it
           order = response1.getOrder();

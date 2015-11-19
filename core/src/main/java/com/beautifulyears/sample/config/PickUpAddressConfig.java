@@ -34,7 +34,7 @@ public class PickUpAddressConfig implements BroadleafEnumerationType {
 					"contact@beautifulyears.com",// email
 					"Beautifulyears.com",// firstName
 					"",// lastName
-					"080 6940 0333",// phne
+					"08069400333",// phne
 					"contact@beautifulyears.com",// primaryEmail
 					"amarnath.m@beautifulyears.com"// secondaryEmail
 			));
@@ -85,7 +85,7 @@ public class PickUpAddressConfig implements BroadleafEnumerationType {
 					"sales@ostrichmobility.com",// email
 					"Ostrich Mobility Instruments Pvt. Ltd.",// firstName
 					"",// lastName
-					"+91 784 70 33033",// phne
+					"7847033033",// phne
 					" info@ostrichmobility.com",// primaryEmail
 					" ostrichmobility@gmail.com"// secondaryEmail
 			));
@@ -102,7 +102,7 @@ public class PickUpAddressConfig implements BroadleafEnumerationType {
 					"thirdlegmobility@gmail.com",// email
 					"Thirdleg Mobility Aids Pvt Ltd",// firstName
 					"",// lastName
-					"+91 80 5622 3234 ",// phne
+					"8056223234 ",// phne
 					"thirdlegmobility@gmail.com",// primaryEmail
 					"vksthirdleg@gmail.com"// secondaryEmail
 			));
@@ -119,7 +119,7 @@ public class PickUpAddressConfig implements BroadleafEnumerationType {
 					"enquiry@adlneurotech.co.in",// email
 					"ADL Neurotech",// firstName
 					"",// lastName
-					"044 2493 9640 , +91 94440 49390",// phne
+					"04424939640 , +91 94440 49390",// phne
 					"enquiry@adlneurotech.co.in",// primaryEmail
 					"ramesh@adlneurotech.co.in"// secondaryEmail
 			));

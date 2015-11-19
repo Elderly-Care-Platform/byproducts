@@ -102,6 +102,7 @@ public class LogisticCheckOutServiceImpl implements LogisticCheckOutService {
 	}
 
 	private void assignAwbNumbers(Order order) throws PricingException {
+		System.out.println("getting awb number");
 		String type = "PPD";
 		if (null != order.getPayments() && null != order.getPayments().get(0)
 				&& null != order.getPayments().get(0).getType()
@@ -116,6 +117,7 @@ public class LogisticCheckOutServiceImpl implements LogisticCheckOutService {
 
 		List<String> awbList = awbService.generate(
 				order.getOrderItems().size(), type);
+		System.out.println("got AWB list with length -> "+awbList.size());
 		int index = 0;
 		for (OrderItem item : order.getOrderItems()) {
 			Map<String, OrderItemAttribute> attributeMap;
@@ -137,7 +139,9 @@ public class LogisticCheckOutServiceImpl implements LogisticCheckOutService {
 	}
 
 	private void placeDeliveryRequest(Order order, OrderItem item) {
+		System.out.println("placing the delivery request with logistic");
 		boolean status = awbService.placeOrder(order, item);
+		System.out.println("logistic delivery requesst sttaus = "+status);
 		if (!status) {
 			throw BroadleafWebServicesException
 					.build(Response.Status.INTERNAL_SERVER_ERROR

@@ -222,15 +222,15 @@ public class CatalogEndpoint extends
 
     List<Category> categoryList = catalogService.findAllCategories();
     List<Category> categoryActiveList = getAllActiveCategories(categoryList);
-    List<Product> products = new ArrayList<Product>();
+    Set<Product> set = new HashSet<Product>();
     for (Category category : categoryActiveList) {
       List<Product> Catproducts = catalogService.findActiveProductsByCategory(category);
       if (Catproducts != null) {
-        products.addAll(Catproducts);
+    	  set.addAll(Catproducts);
       }
     }
 
-    return products.size();
+    return set.size();
   }
 
   /**

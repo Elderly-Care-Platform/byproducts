@@ -59,24 +59,24 @@ public class CustomRestApiFilter extends GenericFilterBean implements Ordered {
 			if (request.getAttribute(sessionIdAttributeName) != null) {
 				sessionId = String.valueOf(request
 						.getAttribute(sessionIdAttributeName));
-				 if (request.getAttribute(customerIdAttributeName) != null) {
-						customerId = String.valueOf(request
-								.getAttribute(customerIdAttributeName));
-					}
+				if (request.getAttribute(customerIdAttributeName) != null) {
+					customerId = String.valueOf(request
+							.getAttribute(customerIdAttributeName));
+				}
 			}
 
 			if (sessionId == null || sessionId.length() < 1) {
 				// If it's not on the request attribute, try the parameter
-				sessionId = servletRequest
-						.getParameter(sessionIdAttributeName);
-				if ((sessionId == null  || sessionId.length() < 1) && customerId == null) {
+				sessionId = servletRequest.getParameter(sessionIdAttributeName);
+				if ((sessionId == null || sessionId.length() < 1)
+						&& customerId == null) {
 					// If it's not on the request attribute, try the parameter
 					customerId = servletRequest
 							.getParameter(customerIdAttributeName);
 				}
-			} 
+			}
 
-			if ((sessionId == null  || sessionId.length() < 1)) {
+			if ((sessionId == null || sessionId.length() < 1)) {
 				// If it's not on the request parameter, look on the header
 				sessionId = request.getHeader(sessionIdAttributeName);
 				if (sessionId == null && customerId == null) {
@@ -84,21 +84,20 @@ public class CustomRestApiFilter extends GenericFilterBean implements Ordered {
 					sessionId = request.getHeader(customerIdAttributeName);
 				}
 			}
-			
+
 			if (sessionId != null && sessionId.trim().length() > 0) {
 
-				// if (NumberUtils.isNumber(customerId)) {
-				// If we found it, look up the customer and put it on the
-				// request.
-				// Customer customer =
-				// customerService.readCustomerById(Long.valueOf(customerId));
-				String obj = RestCallHandler
-						.query(BYConstants.SITE_URL+"/api/v1/users/getUserInfoByIdForProducts?id="+sessionId);
+				String obj = RestCallHandler.query(BYConstants.SITE_URL
+						+ "/api/v1/users/getUserInfoByIdForProducts?id="
+						+ sessionId);
+				System.out.println("making the query to get customer info -> "
+						+ BYConstants.SITE_URL
+						+ "/api/v1/users/getUserInfoByIdForProducts?id="
+						+ sessionId);
 				System.out.println(obj);
 				ExtendCustomer existingCustomer = null;
 				try {
 
-					
 					JSONObject json1 = new JSONObject(obj);
 					JSONObject data = json1.getJSONObject("data");
 
@@ -114,7 +113,7 @@ public class CustomRestApiFilter extends GenericFilterBean implements Ordered {
 					existingCustomer.setEmailAddress(data.getString("email"));
 					existingCustomer.setUsername(data.getString("userName"));
 					existingCustomer.setCustomUserId(data.getString("id"));
-					
+
 					customerService.saveCustomer(existingCustomer);
 				} catch (JSONException e) {
 					e.printStackTrace();
@@ -122,19 +121,15 @@ public class CustomRestApiFilter extends GenericFilterBean implements Ordered {
 				if (existingCustomer != null) {
 					CustomerState.setCustomer(existingCustomer);
 				}
-				// } else {
-				// LOG.warn(String.format("The customer id passed in '%s' was not a number",
-				// customerId));
-				// }
 			}
 
-			if ((sessionId == null  || sessionId.length() < 1)) {
-				if(customerId != null){
-					 Customer customer =
-							 customerService.readCustomerById(Long.valueOf(customerId));
-					 CustomerState.setCustomer(customer);
-				}			
-				
+			if ((sessionId == null || sessionId.length() < 1)) {
+				if (customerId != null) {
+					Customer customer = customerService.readCustomerById(Long
+							.valueOf(customerId));
+					CustomerState.setCustomer(customer);
+				}
+
 				if (LOG.isDebugEnabled()) {
 					LOG.debug("No customer ID was found for the API request. In order to look up a customer for the request"
 							+ " send a request parameter or request header for the '"
