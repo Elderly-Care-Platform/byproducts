@@ -1,5 +1,6 @@
 package com.beautifulyears.api.wrapper;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -14,14 +15,16 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.log4j.Logger;
+import org.broadleafcommerce.common.currency.util.BroadleafCurrencyUtils;
+import org.broadleafcommerce.common.money.Money;
 import org.broadleafcommerce.core.offer.domain.OrderAdjustment;
+import org.broadleafcommerce.core.order.domain.DiscreteOrderItem;
 import org.broadleafcommerce.core.order.domain.FulfillmentGroup;
 import org.broadleafcommerce.core.order.domain.Order;
 import org.broadleafcommerce.core.order.domain.OrderAttribute;
 import org.broadleafcommerce.core.order.domain.OrderItem;
 import org.broadleafcommerce.core.order.service.OrderService;
 import org.broadleafcommerce.core.order.service.call.ActivityMessageDTO;
-import org.broadleafcommerce.core.order.service.type.OrderStatus;
 import org.broadleafcommerce.core.payment.domain.OrderPayment;
 import org.broadleafcommerce.core.web.api.wrapper.APIUnwrapper;
 import org.broadleafcommerce.core.web.api.wrapper.AdjustmentWrapper;
@@ -29,15 +32,13 @@ import org.broadleafcommerce.core.web.api.wrapper.CartMessageWrapper;
 import org.broadleafcommerce.core.web.api.wrapper.CustomerWrapper;
 import org.broadleafcommerce.core.web.api.wrapper.FulfillmentGroupWrapper;
 import org.broadleafcommerce.core.web.api.wrapper.OrderAttributeWrapper;
-import org.broadleafcommerce.core.web.api.wrapper.OrderItemWrapper;
 import org.broadleafcommerce.core.web.api.wrapper.OrderPaymentWrapper;
 import org.broadleafcommerce.core.web.api.wrapper.OrderWrapper;
 import org.broadleafcommerce.profile.core.domain.Address;
 import org.springframework.context.ApplicationContext;
 
-import com.beautifulyears.sample.fedExOrder.domain.OrderTrackingInfo;
+import com.beautifulyears.sample.catalog.domain.ExtendProductImpl;
 import com.beautifulyears.sample.profile.domain.ExtendAddress;
-import com.beautifulyears.service.fedExOrder.FedExOrderService;
 
 /**
  * This wrapper provides wrap and unwrap method for order
@@ -75,18 +76,24 @@ public class ExtendOrderWrapper extends OrderWrapper implements APIUnwrapper<Ord
   @XmlElement(name = "feedback")
   protected String feedback;
 
-  /*
-   * Extend wrap details method to add extended entities in existing wrapper
-   * 
-   * (non-Javadoc)
-   * 
-   * @see org.broadleafcommerce.core.web.api.wrapper.OrderWrapper#wrapDetails(org
-   * .broadleafcommerce.core .order.domain.Order, javax.servlet.http.HttpServletRequest)
-   */
-  @Override
-  public void wrapDetails(Order model, HttpServletRequest request) {
-    this.id = model.getId();
-    Address address = null;
+	@XmlElement(name = "orderItem")
+	@XmlElementWrapper(name = "orderItems")
+	protected List<ExtendOrderItemWrapper> orderItems;
+
+	/*
+	 * Extend wrap details method to add extended entities in existing wrapper
+	 * 
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.broadleafcommerce.core.web.api.wrapper.OrderWrapper#wrapDetails(org
+	 * .broadleafcommerce.core .order.domain.Order,
+	 * javax.servlet.http.HttpServletRequest)
+	 */
+	@Override
+	public void wrapDetails(Order model, HttpServletRequest request) {
+		this.id = model.getId();
+		Address address = null;
 
     if (model.getStatus() != null) {
       this.status = model.getStatus().getType();
@@ -103,10 +110,10 @@ public class ExtendOrderWrapper extends OrderWrapper implements APIUnwrapper<Ord
     this.orderNumber = model.getOrderNumber();
     this.submittedDate = model.getSubmitDate();
     if (model.getOrderItems() != null && !model.getOrderItems().isEmpty()) {
-      this.orderItems = new ArrayList<OrderItemWrapper>();
+			this.orderItems = new ArrayList<ExtendOrderItemWrapper>();
       for (OrderItem orderItem : model.getOrderItems()) {
-        OrderItemWrapper orderItemWrapper =
-            (OrderItemWrapper) context.getBean(OrderItemWrapper.class.getName());
+				ExtendOrderItemWrapper orderItemWrapper = (ExtendOrderItemWrapper) context
+						.getBean(ExtendOrderItemWrapper.class.getName());
         orderItemWrapper.wrapSummary(orderItem, request);
         this.orderItems.add(orderItemWrapper);
       }
@@ -211,6 +218,7 @@ public class ExtendOrderWrapper extends OrderWrapper implements APIUnwrapper<Ord
         FulfillmentGroup.setAddress(address);
         fulfillmentGroupList.add(FulfillmentGroup);
       }
+			
       // Set shippping address in order
       order.setFulfillmentGroups(fulfillmentGroupList);
     }

@@ -36,6 +36,15 @@
             </list>
         </property>
     </bean>
+    
+    
+    <bean id="blPricingWorkflow" class="org.broadleafcommerce.core.workflow.SequenceProcessor">
+        <property name="activities">
+            <list>            	
+                <bean p:order="7500" class="com.beautifulyears.workflow.UpdateDeliveryChargesActivity" />
+            </list>
+        </property>
+    </bean>
 
     <bean id="blCheckoutWorkflow" class="org.broadleafcommerce.core.workflow.SequenceProcessor">
         <property name="activities">

@@ -329,6 +329,9 @@
 
 	<bean id="com.beautifulyears.api.wrapper.ExtendOrderWrapper"
 		class="com.beautifulyears.api.wrapper.ExtendOrderWrapper" scope="prototype" />
+		
+	<bean id="com.beautifulyears.api.wrapper.ExtendOrderItemWrapper"
+		class="com.beautifulyears.api.wrapper.ExtendOrderItemWrapper" scope="prototype" />
 
 	<bean id="org.broadleafcommerce.core.web.api.wrapper.CategoryWrapper"
 		class="com.beautifulyears.api.wrapper.ExtendCategoryWrapper" scope="prototype" />
