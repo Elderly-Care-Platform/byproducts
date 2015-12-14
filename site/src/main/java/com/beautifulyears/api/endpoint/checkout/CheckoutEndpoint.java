@@ -38,6 +38,7 @@ import org.broadleafcommerce.core.order.domain.FulfillmentGroup;
 import org.broadleafcommerce.core.order.domain.Order;
 import org.broadleafcommerce.core.order.domain.OrderAttribute;
 import org.broadleafcommerce.core.order.domain.OrderAttributeImpl;
+import org.broadleafcommerce.core.order.domain.OrderItem;
 import org.broadleafcommerce.core.pricing.service.exception.PricingException;
 import org.broadleafcommerce.core.web.api.BroadleafWebServicesException;
 import org.broadleafcommerce.core.web.api.wrapper.OrderPaymentWrapper;
@@ -150,25 +151,6 @@ public class CheckoutEndpoint extends
         for (FulfillmentGroup fulfillment : order.getFulfillmentGroups()) {
           address = (ExtendAddress) fulfillment.getAddress();
         }
-        // Get the required FedEx Details from ShipWebServiceClient and RateWebServiceClient
-//        OrderTrackingInfo orderTrackingInfo = ShipWebServiceClient.getShipWebService(address);
-//        RateWebService rateWebService = RateWebServiceClient.getFedexServiceRates(/* address */);
-        // Set the FedEx details in the order Tracking information
-//        orderTrackingInfo.setDeliveryDate(rateWebService.getDeliveryDate());
-//        orderTrackingInfo.setRateServiceMessage(rateWebService.getRateServiceMessage());
-//        orderTrackingInfo.setRateServiceSeverity(rateWebService.getRateServiceSeverity());
-
-//        if (orderTrackingInfo.getShippingSeverity() == "SUCCESS"){
-//            && orderTrackingInfo.getRateServiceSeverity() == "SUCCESS") {
-//          FedExOrderService fedExOrderService =
-//              (FedExOrderService) context.getBean("blFedExOrderService");
-//          orderTrackingInfo.setOrderId(cart.getId());
-          // Save the FedEx order information
-//          orderTrackingInfo = fedExOrderService.saveOrder(orderTrackingInfo);
-//          FedExTrackingWrapper fedexwrapper =
-//              (FedExTrackingWrapper) context.getBean(FedExTrackingWrapper.class.getName());
-//          fedexwrapper.wrapDetails(orderTrackingInfo, request);
-          // Perform check out process
         
         
         Map<String, OrderAttribute>  attributeMap;
@@ -209,12 +191,17 @@ public class CheckoutEndpoint extends
         		  emailService.sendOrderConfirmationAdmin(order, null,
         				  adminEmail);
         	  }
+        	  
+        	  for(OrderItem item : order.getOrderItems()){
+        		  for(String adminEmail : BYConstants.ADMIN_EMAILS){
+            		  emailService.sendOrderItemConfirmation(order, item, adminEmail);
+            	  }
+        	  }
             
           } catch (IOException e) {
             e.printStackTrace();
           }
           return wrapper;
-//        }
       } catch (CheckoutException e) {
         throw BroadleafWebServicesException.build(
             Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).addMessage(

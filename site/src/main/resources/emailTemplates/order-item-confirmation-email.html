@@ -1,9 +1,9 @@
 <html>
   <head><title>Order Confirmation Email</title></head>
   <body background="#FFFFFF">
-  	<p>Hi, Thanks for your order! <!-- a th:href="@{https://www.fedex.com/apps/fedextrack/(action='track', trackingnumber=${orderTrackingInfo.trackingNumber})}" target="_blank"><span th:text="${orderTrackingInfo.trackingNumber}"></span></a> --></p>
+  	<p>Hi Admin, New order has been placed with below mentioned item details! <!-- a th:href="@{https://www.fedex.com/apps/fedextrack/(action='track', trackingnumber=${orderTrackingInfo.trackingNumber})}" target="_blank"><span th:text="${orderTrackingInfo.trackingNumber}"></span></a> --></p>
 
-<p><span style="line-height: 20.8px;">Please find below, the summary of your order.</span></p>
+<img style="max-height:300px;max-width:300px" th:src="*{''+barcodeImgData}" alt="" />
 
 <p><span style="font-size:14px;"><strong>Details:</strong></span></p>
 
@@ -32,21 +32,13 @@
 
 <p><strong><span style="font-size:14px;">Order Details:</span></strong></p>
 &nbsp;
-<div th:each="orderItem : ${order.orderItems}">
+
 <p><span style="font-size:12px;"><span style="color: rgb(0, 0, 0); font-family: century_gothic; font-weight: bold; line-height: 27.2px; background-color: rgb(249, 249, 249);"><span th:text="${orderItem.name}"></span></span></span></p>
 <p><span style="font-size:11px;">ProductId: <span th:text="${orderItem.id}"></span></span></p>
-
-
+<p><span style="font-size:11px;">AWB Number: <span th:text="${awbNumber}"></span></span></p>
 <p style="line-height: 20.8px;"><span style="font-size:11px;">Quantity: <span th:text="${orderItem.quantity}"></span></span></p>
 <p style="line-height: 20.8px;"><span style="font-size:11px;">Amount:&nbsp;<span class="ng-binding" style="box-sizing: border-box; font-weight: 700; color: rgb(0, 0, 0); font-family: century_gothic; line-height: 24px; border-radius: 0px !important; background-color: rgb(249, 249, 249);"><span th:text="${orderItem.price}"></span></span></span></p>
-</div>
 
-<hr />
-<p style="text-align: right;"><span style="font-size:11px;"><strong>Subtotal: <span th:text="${order.subTotal}"></span></strong></span></p>
-<p style="text-align: right;"><span style="font-size:11px;"><strong>VAT:</strong> 10%</span></p>
-<p style="text-align: right;"><span style="font-size:11px;"><strong>Shipping:</strong> <span th:text="${order.totalFulfillmentCharges}"></span></span></p>
-<p style="text-align: right;"><span style="font-size:11px;"><strong>Total:</strong> <span th:text="${order.total}"></span></span></p>
-<hr />
 <p><span style="line-height: 20.8px;">For any assistance with your order please call us at&nbsp;</span><a href="tel:08069400333" style="line-height: 20.8px;">080-6940-0333</a><span style="line-height: 20.8px;">&nbsp;or email us at&nbsp;</span><a href="mailto:writetous@beautifulyears.com" style="line-height: 20.8px;">writetous@beautifulyears.com</a><span style="line-height: 20.8px;">.</span></p>
 
 <p><span style="font-size: 8px; line-height: 1.6em;">Disclaimer:</span></p>

@@ -3,9 +3,6 @@
  */
 package com.beautifulyears.service.logistic.checkOut;
 
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,16 +10,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import javax.annotation.Resource;
-import javax.imageio.ImageIO;
 import javax.ws.rs.core.Response;
 
-import net.sourceforge.barbecue.Barcode;
-import net.sourceforge.barbecue.BarcodeException;
-import net.sourceforge.barbecue.BarcodeFactory;
-import net.sourceforge.barbecue.BarcodeImageHandler;
-import net.sourceforge.barbecue.output.OutputException;
-
-import org.apache.commons.codec.binary.Base64;
 import org.broadleafcommerce.common.payment.PaymentType;
 import org.broadleafcommerce.core.checkout.service.exception.CheckoutException;
 import org.broadleafcommerce.core.checkout.service.workflow.CheckoutResponse;
@@ -141,8 +130,6 @@ public class LogisticCheckOutServiceImpl implements LogisticCheckOutService {
 			OrderItemAttribute awbAttribute = new OrderItemAttributeImpl();
 			awbAttribute.setName("awbNumber");
 			awbAttribute.setValue(awbList.get(idx));
-			awbAttribute.setName("awbBarCode");
-			awbAttribute.setValue(getBarCodeImage(awbList.get(idx)));
 			awbAttribute.setOrderItem(item);
 			attributeMap.put("awbNumber", awbAttribute);
 			item.setOrderItemAttributes(attributeMap);
@@ -196,30 +183,6 @@ public class LogisticCheckOutServiceImpl implements LogisticCheckOutService {
 	 */
 	protected void removeLock(Long orderId) {
 		lockMap.remove(orderId);
-	}
-	
-	private String getBarCodeImage(String awb){
-		String barCodeImage = "";
-		try {
-			Barcode b = BarcodeFactory.createCode128("Hello");
-			BufferedImage barImage = BarcodeImageHandler.getImage(b);
-			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			ImageIO.write(barImage, "PNG", out);
-			byte[] bytes = out.toByteArray();
-
-			String base64bytes = Base64.encodeBase64String(bytes);
-			barCodeImage = "data:image/png;base64," + base64bytes;
-		} catch (BarcodeException e) {
-			e.printStackTrace();
-		} catch (OutputException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return barCodeImage;
 	}
 
 }
