@@ -60,10 +60,19 @@ public class ExtendProductWrapper extends ProductWrapper {
 
   @XmlElement
   private Boolean cashOnDelivery;
+  
+  @XmlElement
+  private String pickupAddressCode;
 
   @XmlElement
   private List<ExtendProductCODWrapper> productCashOnDeliveryPincode =
       new ArrayList<ExtendProductCODWrapper>();
+  
+  @XmlElement
+  private String taxCode;
+
+  @XmlElement
+  private Boolean isTaxable = false;
 
   /*
    * Extend wrap details method to add extended entities in existing wrapper (non-Javadoc)
@@ -82,6 +91,8 @@ public class ExtendProductWrapper extends ProductWrapper {
     this.categoryId = model.getDefaultCategory().getId();
     this.categoryName = model.getDefaultCategory().getName();
     this.isFeaturedProduct = model.isFeaturedProduct();
+    this.taxCode = model.getDefaultSku().getTaxCode();
+    this.isTaxable = model.getDefaultSku().isTaxable();
     if (model instanceof ExtendProductImpl) {
       if (((ExtendProductImpl) model).getProductWarranty() != null) {
         this.productWarranty = ((ExtendProductImpl) model).getProductWarranty();
@@ -110,6 +121,10 @@ public class ExtendProductWrapper extends ProductWrapper {
       if (((ExtendProductImpl) model).getProductDeliveryCharges() != null) {
         this.productDeliveryCharges = ((ExtendProductImpl) model).getProductDeliveryCharges();
       }
+      
+      if (((ExtendProductImpl) model).getPickupAddressCode() != null) {
+          this.pickupAddressCode = ((ExtendProductImpl) model).getPickupAddressCode();
+        }
 
       this.cashOnDelivery = ((ExtendProductImpl) model).getCashOnDelivery();
 

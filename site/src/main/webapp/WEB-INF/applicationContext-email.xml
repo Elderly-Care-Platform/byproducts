@@ -51,6 +51,11 @@
         <property name="emailTemplate" value="order-confirmation-email"/>
     </bean>
     
+    <bean id="blOrderItemConfirmationEmailInfo" parent="blEmailInfo">
+        <property name="subject" value="Item Summary"/>
+        <property name="emailTemplate" value="order-item-confirmation-email"/>
+    </bean>
+    
     <!-- Define mail template for order confirmation for admin -->
     <bean id="blOrderConfirmationAdminEmailInfo" parent="blEmailInfo">
         <property name="subject" value="New Order"/>

@@ -114,23 +114,23 @@ public class ProductOptionImpl implements ProductOption, AdminMainEntity {
     protected Integer displayOrder;
 
     @Column(name = "VALIDATION_STRATEGY_TYPE")
-    @AdminPresentation(friendlyName = "productOption_validationStrategyType", group = "productOption_validation", fieldType = SupportedFieldType.BROADLEAF_ENUMERATION, broadleafEnumeration = "org.broadleafcommerce.core.catalog.service.type.ProductOptionValidationStrategyType")
+//    @AdminPresentation(friendlyName = "productOption_validationStrategyType", group = "productOption_validation", fieldType = SupportedFieldType.BROADLEAF_ENUMERATION, broadleafEnumeration = "org.broadleafcommerce.core.catalog.service.type.ProductOptionValidationStrategyType")
     private String productOptionValidationStrategyType;
 
     @Column(name = "VALIDATION_TYPE")
-    @AdminPresentation(friendlyName = "productOption_validationType", group = "productOption_validation", fieldType = SupportedFieldType.BROADLEAF_ENUMERATION, broadleafEnumeration = "org.broadleafcommerce.core.catalog.service.type.ProductOptionValidationType")
+//    @AdminPresentation(friendlyName = "productOption_validationType", group = "productOption_validation", fieldType = SupportedFieldType.BROADLEAF_ENUMERATION, broadleafEnumeration = "org.broadleafcommerce.core.catalog.service.type.ProductOptionValidationType")
     private String productOptionValidationType;
 
     @Column(name = "VALIDATION_STRING")
-    @AdminPresentation(friendlyName = "productOption_validationSring", group = "productOption_validation")
+//    @AdminPresentation(friendlyName = "productOption_validationSring", group = "productOption_validation")
     protected String validationString;
 
     @Column(name = "ERROR_CODE")
-    @AdminPresentation(friendlyName = "productOption_errorCode", group = "productOption_validation")
+//    @AdminPresentation(friendlyName = "productOption_errorCode", group = "productOption_validation")
     protected String errorCode;
 
     @Column(name = "ERROR_MESSAGE")
-    @AdminPresentation(friendlyName = "productOption_errorMessage", group = "productOption_validation", translatable = true)
+//    @AdminPresentation(friendlyName = "productOption_errorMessage", group = "productOption_validation", translatable = true)
     protected String errorMessage;
 
     @OneToMany(mappedBy = "productOption", targetEntity = ProductOptionValueImpl.class, cascade = {CascadeType.ALL})

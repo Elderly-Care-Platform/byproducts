@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -37,6 +38,8 @@ import org.broadleafcommerce.core.order.domain.FulfillmentGroup;
 import org.broadleafcommerce.core.order.domain.Order;
 import org.broadleafcommerce.core.order.domain.OrderAttribute;
 import org.broadleafcommerce.core.order.domain.OrderAttributeImpl;
+import org.broadleafcommerce.core.order.domain.OrderItem;
+import org.broadleafcommerce.core.pricing.service.exception.PricingException;
 import org.broadleafcommerce.core.web.api.BroadleafWebServicesException;
 import org.broadleafcommerce.core.web.api.wrapper.OrderPaymentWrapper;
 import org.broadleafcommerce.core.web.api.wrapper.OrderWrapper;
@@ -47,14 +50,9 @@ import org.springframework.stereotype.Component;
 import com.beautifulyears.BYConstants;
 import com.beautifulyears.api.wrapper.ExtendOrderPaymentWrapper;
 import com.beautifulyears.api.wrapper.ExtendOrderWrapper;
-import com.beautifulyears.api.wrapper.FedExTrackingWrapper;
-import com.beautifulyears.domain.fedex.RateWebService;
-import com.beautifulyears.sample.fedExOrder.domain.OrderTrackingInfo;
 import com.beautifulyears.sample.profile.domain.ExtendAddress;
 import com.beautifulyears.service.email.ExtendEmailService;
-import com.beautifulyears.service.fedExOrder.FedExOrderService;
-import com.beautifulyears.webserviceclient.RateWebServiceClient;
-import com.beautifulyears.webserviceclient.ShipWebServiceClient;
+import com.beautifulyears.service.logistic.checkOut.LogisticCheckOutService;
 
 /**
  * This endpoint provides rest for checkout.
@@ -71,6 +69,9 @@ public class CheckoutEndpoint extends
     org.broadleafcommerce.core.web.api.endpoint.checkout.CheckoutEndpoint {
 
   final static Logger logger = Logger.getLogger(CheckoutEndpoint.class);
+  
+  @Resource(name = "blLogisticCheckoutService")
+	protected LogisticCheckOutService logisticCheckoutService;
 
   /*
    * This method is used to get payment details for order
@@ -129,12 +130,13 @@ public class CheckoutEndpoint extends
    * @param request
    * @param orderWrapper
    * @return
+ * @throws PricingException 
    * 
    */
 
   @POST
   public OrderWrapper performCheckout(@Context HttpServletRequest request,
-      ExtendOrderWrapper orderWrapper) {
+      ExtendOrderWrapper orderWrapper) throws PricingException {
     logger.debug("Executing method : performCheckout()");
     // Get the cart
     Order cart = CartState.getCart();
@@ -149,25 +151,6 @@ public class CheckoutEndpoint extends
         for (FulfillmentGroup fulfillment : order.getFulfillmentGroups()) {
           address = (ExtendAddress) fulfillment.getAddress();
         }
-        // Get the required FedEx Details from ShipWebServiceClient and RateWebServiceClient
-//        OrderTrackingInfo orderTrackingInfo = ShipWebServiceClient.getShipWebService(address);
-//        RateWebService rateWebService = RateWebServiceClient.getFedexServiceRates(/* address */);
-        // Set the FedEx details in the order Tracking information
-//        orderTrackingInfo.setDeliveryDate(rateWebService.getDeliveryDate());
-//        orderTrackingInfo.setRateServiceMessage(rateWebService.getRateServiceMessage());
-//        orderTrackingInfo.setRateServiceSeverity(rateWebService.getRateServiceSeverity());
-
-//        if (orderTrackingInfo.getShippingSeverity() == "SUCCESS"){
-//            && orderTrackingInfo.getRateServiceSeverity() == "SUCCESS") {
-//          FedExOrderService fedExOrderService =
-//              (FedExOrderService) context.getBean("blFedExOrderService");
-//          orderTrackingInfo.setOrderId(cart.getId());
-          // Save the FedEx order information
-//          orderTrackingInfo = fedExOrderService.saveOrder(orderTrackingInfo);
-//          FedExTrackingWrapper fedexwrapper =
-//              (FedExTrackingWrapper) context.getBean(FedExTrackingWrapper.class.getName());
-//          fedexwrapper.wrapDetails(orderTrackingInfo, request);
-          // Perform check out process
         
         
         Map<String, OrderAttribute>  attributeMap;
@@ -189,8 +172,10 @@ public class CheckoutEndpoint extends
         
         
           CheckoutResponse response = checkoutService.performCheckout(cart);
+          System.out.println("System checkout done completely..trying out logistic checkout");
+          CheckoutResponse response1 = logisticCheckoutService.checkOut(cart);
           // Get order and wrap it
-          order = response.getOrder();
+          order = response1.getOrder();
           ExtendOrderWrapper wrapper =
               (ExtendOrderWrapper) context.getBean(ExtendOrderWrapper.class.getName());
           wrapper.wrapDetails(order, request);
@@ -199,22 +184,24 @@ public class CheckoutEndpoint extends
           ExtendEmailService emailService =
               (ExtendEmailService) context.getBean("extendEmailService");
           try {
-//            emailService.sendOrderConfirmation(order, orderTrackingInfo, address.getPrimaryEmail());
         	  if(null != address.getPrimaryEmail()){
         		  emailService.sendOrderConfirmation(order, null, address.getPrimaryEmail());
         	  }
-//            emailService.sendOrderConfirmationAdmin(order, orderTrackingInfo,
-//                "jharana.v@beautifulyears.com");
         	  for(String adminEmail : BYConstants.ADMIN_EMAILS){
         		  emailService.sendOrderConfirmationAdmin(order, null,
         				  adminEmail);
+        	  }
+        	  
+        	  for(OrderItem item : order.getOrderItems()){
+        		  for(String adminEmail : BYConstants.ADMIN_EMAILS){
+            		  emailService.sendOrderItemConfirmation(order, item, adminEmail);
+            	  }
         	  }
             
           } catch (IOException e) {
             e.printStackTrace();
           }
           return wrapper;
-//        }
       } catch (CheckoutException e) {
         throw BroadleafWebServicesException.build(
             Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).addMessage(

@@ -204,7 +204,7 @@ public class SkuImpl implements Sku {
 
     @Column(name = "TAXABLE_FLAG")
     @Index(name="SKU_TAXABLE_INDEX", columnNames={"TAXABLE_FLAG"})
-    @AdminPresentation(friendlyName = "SkuImpl_Sku_Taxable", order = 1000, excluded = true,
+    @AdminPresentation(friendlyName = "SkuImpl_Sku_Taxable", order = 1000, excluded = false,
             group = ProductImpl.Presentation.Group.Name.Financial)
     protected Character taxable;
 

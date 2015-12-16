@@ -127,7 +127,7 @@ public class CatalogEndpoint extends
       // Get products
       List<Product> products = result.getProducts();
       if (null != products) {
-        List<Product> activeProductList = new ArrayList<Product>();
+        Set<Product> activeProductSet = new HashSet<Product>();
         List<Category> categoryList = catalogService.findAllCategories();
         List<Category> categoryActiveList = getAllActiveCategories(categoryList);
         for (Category category : categoryActiveList) {
@@ -136,16 +136,16 @@ public class CatalogEndpoint extends
             long id = product.getId();
             for (Product currentProduct : products) {
               if (currentProduct.getId() == id) {
-                activeProductList.add(product);
+                activeProductSet.add(product);
               }
             }
           }
         }
         
-        result.setTotalResults(activeProductList.size());
+        result.setTotalResults(activeProductSet.size());
         result.setPage(page);
         result.setPageSize(pageSize);
-
+        List<Product> activeProductList = new ArrayList<Product>(activeProductSet);
         // Pagination
         activeProductList = getProductPagination(activeProductList, page, pageSize);
 
@@ -188,17 +188,19 @@ public class CatalogEndpoint extends
     List<Category> categoryList = catalogService.findAllCategories();
     List<Category> categoryActiveList = getAllActiveCategories(categoryList);
     List<ProductWrapper> out = new ArrayList<ProductWrapper>();
-    List<Product> products = new ArrayList<Product>();
+    Set<Product> productsSet = new HashSet<Product>();
     for (Category category : categoryActiveList) {
       List<Product> Catproducts = catalogService.findActiveProductsByCategory(category);
       if (Catproducts != null) {
-        products.addAll(Catproducts);
+        productsSet.addAll(Catproducts);
       }
     }
 
-    products = getProductPagination(products, page, pageSize);
+    
+    List<Product> productsList = new ArrayList<Product>(productsSet);
+    productsList = getProductPagination(productsList, page, pageSize);
 
-    for (Product product : products) {
+    for (Product product : productsList) {
       ProductWrapper wrapper = (ProductWrapper) context.getBean(ProductWrapper.class.getName());
       wrapper.wrapSummary(product, request);
       out.add(wrapper);
@@ -222,15 +224,15 @@ public class CatalogEndpoint extends
 
     List<Category> categoryList = catalogService.findAllCategories();
     List<Category> categoryActiveList = getAllActiveCategories(categoryList);
-    List<Product> products = new ArrayList<Product>();
+    Set<Product> set = new HashSet<Product>();
     for (Category category : categoryActiveList) {
       List<Product> Catproducts = catalogService.findActiveProductsByCategory(category);
       if (Catproducts != null) {
-        products.addAll(Catproducts);
+    	  set.addAll(Catproducts);
       }
     }
 
-    return products.size();
+    return set.size();
   }
 
   /**

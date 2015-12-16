@@ -11,6 +11,7 @@
         <class>com.beautifulyears.sample.profile.domain.ExtendAddressImpl</class>
         <class>com.beautifulyears.sample.fedExOrder.domain.OrderTrackingInfoImpl</class>
         <class>com.beautifulyears.sample.profile.domain.ExtendCustomerImpl</class>
+        <class>com.beautifulyears.sample.logistic.domain.PincodeImpl</class>
         <exclude-unlisted-classes/>
     </persistence-unit>
     

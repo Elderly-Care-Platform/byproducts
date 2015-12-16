@@ -6,14 +6,18 @@ import java.util.HashMap;
 import javax.annotation.Resource;
 
 import org.broadleafcommerce.common.email.service.EmailService;
+import org.broadleafcommerce.common.email.service.EmailServiceImpl;
 import org.broadleafcommerce.common.email.service.info.EmailInfo;
+import org.broadleafcommerce.common.email.service.message.Attachment;
 import org.broadleafcommerce.core.order.domain.Order;
+import org.broadleafcommerce.core.order.domain.OrderItem;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Service;
 
 import com.beautifulyears.sample.fedExOrder.domain.OrderTrackingInfo;
+import com.beautifulyears.util.BarcodeUtil;
 
 /**
  * This service is used to send mail for order confirmation and order cancellation
@@ -43,9 +47,44 @@ public class ExtendEmailServiceImpl implements ApplicationContextAware, ExtendEm
   public void sendOrderConfirmation(Order order, OrderTrackingInfo orderTrackingInfo,
       String emailAddress) throws IOException {
     HashMap<String, Object> props = new HashMap<String, Object>();
+    StringBuffer name = new StringBuffer("");
+    name.append(order.getOrderAttributes().get("firstName"));
+    name.append(" ");
+    name.append(order.getOrderAttributes().get("lastName"));
+    props.put("name", name.toString());
+    
+    
+    StringBuffer address1 = new StringBuffer("");
+    address1.append(order.getOrderAttributes().get("AddressLine1"));
+    address1.append(order.getOrderAttributes().get(" ,"));
+    props.put("address1", address1.toString());
+    
+    StringBuffer address2 = new StringBuffer("");
+    address2.append(order.getOrderAttributes().get("AddressLine2"));
+    address2.append(" ,");
+    address2.append(order.getOrderAttributes().get("City"));
+    address2.append(" , mob:");
+    address2.append(order.getOrderAttributes().get("Phone"));
+    address2.append(" ,");
+    props.put("address2", address2.toString());
+    
     props.put("order", order);
     props.put("orderTrackingInfo", orderTrackingInfo);
-    emailService.sendTemplateEmail(emailAddress, getOrderConfirmationEmailInfo(), props);
+    
+    EmailInfo emailInfo = getOrderConfirmationEmailInfo();
+    StringBuffer file = new StringBuffer();
+    String msgBody = ((EmailServiceImpl)emailService).getMessageCreator().buildMessageBody(emailInfo, props);
+    System.out.println(msgBody);
+    file.append(msgBody);
+
+    Attachment attachment = new Attachment();
+    attachment.setData(file.toString().getBytes());
+    attachment.setMimeType("text/html");
+    attachment.setFilename("order.html");
+    
+    emailInfo.getAttachments().clear();
+    emailInfo.getAttachments().add(attachment);
+    emailService.sendTemplateEmail(emailAddress, emailInfo, props);
   }
 
   /*
@@ -82,18 +121,6 @@ public class ExtendEmailServiceImpl implements ApplicationContextAware, ExtendEm
     emailService.sendTemplateEmail(emailAddress, getOrderCancellationEmailInfo(), props);
   }
 
-  /*
-   * Above method is used to send mail on order cancellation for admin (non-Javadoc)
-   * 
-   * @see com.beautifulyears.service.email.ExtendEmailService#sendOrderCancellationAdmin(org.
-   * broadleafcommerce.core.order.domain.Order, java.lang.String)
-   */
-  @Override
-  public void sendOrderCancellationAdmin(Order order, String emailAddress) throws IOException {
-    HashMap<String, Object> props = new HashMap<String, Object>();
-    props.put("order", order);
-    emailService.sendTemplateEmail(emailAddress, getOrderCancellationAdminEmailInfo(), props);
-  }
 
   /*
    * Send mail for requesting feedback
@@ -124,17 +151,6 @@ public class ExtendEmailServiceImpl implements ApplicationContextAware, ExtendEm
    */
   private EmailInfo getOrderCancellationEmailInfo() {
     return (EmailInfo) applicationContext.getBean("blOrderCancellationEmailInfo");
-  }
-
-  /**
-   * Above method is used to get bean for order cancellation, the bean set properties for sending
-   * mail, Method based injection because we need to reference prototype scoped beans in a singleton
-   * bean
-   * 
-   * @return
-   */
-  private EmailInfo getOrderCancellationAdminEmailInfo() {
-    return (EmailInfo) applicationContext.getBean("blOrderCancellationAdminEmailInfo");
   }
 
   /**
@@ -172,4 +188,79 @@ public class ExtendEmailServiceImpl implements ApplicationContextAware, ExtendEm
   public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
     this.applicationContext = applicationContext;
   }
+
+@Override
+public void sendOrderItemConfirmation(Order order,
+		OrderItem item, String emailAddress)
+		throws IOException {
+	{
+	    HashMap<String, Object> props = new HashMap<String, Object>();
+	    props.put("order", order);
+	    props.put("orderItem", item);
+	    
+	    StringBuffer name = new StringBuffer("");
+	    name.append(order.getOrderAttributes().get("firstName"));
+	    name.append(" ");
+	    name.append(order.getOrderAttributes().get("lastName"));
+	    props.put("name", name.toString());
+	    
+	    
+	    StringBuffer address1 = new StringBuffer("");
+	    address1.append(order.getOrderAttributes().get("AddressLine1"));
+	    address1.append(order.getOrderAttributes().get(" ,"));
+	    props.put("address1", address1.toString());
+	    
+	    StringBuffer address2 = new StringBuffer("");
+	    address2.append(order.getOrderAttributes().get("AddressLine2"));
+	    address2.append(" ,");
+	    address2.append(order.getOrderAttributes().get("City"));
+	    address2.append(" , mob:");
+	    address2.append(order.getOrderAttributes().get("Phone"));
+	    address2.append(" ,");
+	    props.put("address2", address2.toString());
+	    System.out.println("finding item awb ========");
+	    if(null != item.getOrderItemAttributes()   &&  null != item.getOrderItemAttributes().get("awbNumber")){
+	    	String awb = item.getOrderItemAttributes().get("awbNumber").getValue();
+	    	props.put("awbNumber", awb);
+	    	System.out.println("item's awb = "+awb);
+	    	String barCodeImageDataPath = BarcodeUtil.getBarcodeImage(awb);
+	    	System.out.println("barcode data = "+barCodeImageDataPath);
+	        props.put("barcodeImgData", barCodeImageDataPath);
+	    }
+	    
+	    StringBuffer file = new StringBuffer();
+	    EmailInfo emailInfo = getOrderItemConfirmationEmailInfo();
+	    String msgBody = ((EmailServiceImpl)emailService).getMessageCreator().buildMessageBody(emailInfo, props);
+	    System.out.println(msgBody);
+	    file.append(msgBody);
+
+	    Attachment attachment = new Attachment();
+	    attachment.setData(file.toString().getBytes());
+	    attachment.setMimeType("text/html");
+	    attachment.setFilename("order.html");
+	    
+	    emailInfo.getAttachments().clear();
+	    emailInfo.getAttachments().add(attachment);
+	    emailService.sendTemplateEmail(emailAddress, emailInfo, props);
+	  }
+	
+}
+
+/**
+ * Above method is used to get bean for order confirmation, the bean set properties for sending
+ * mail, Method based injection because we need to reference prototype scoped beans in a singleton
+ * bean
+ * 
+ * @return
+ */
+private EmailInfo getOrderItemConfirmationEmailInfo() {
+  return (EmailInfo) applicationContext.getBean("blOrderItemConfirmationEmailInfo");
+}
+
+@Override
+public void sendOrderCancellationAdmin(Order order, String emailAddress)
+		throws IOException {
+	// TODO Auto-generated method stub
+	
+}
 }
