@@ -99,6 +99,9 @@ public class AwbDaolmpl implements AwbDao {
 		String orderType = order.getOrderAttributes().get("deliveryType")
 				.getValue();
 		System.out.println("orderType = " + orderType);
+		ExtendProductImpl product = (ExtendProductImpl) ((DiscreteOrderItem) item)
+				.getProduct();
+		Integer amount = Integer.valueOf(item.getTotalPrice().getAmount().intValue()) + product.getProductDeliveryCharges();
 		ExtendAddressImpl pickupAddress = null;
 
 		if (item instanceof DiscreteOrderItem
@@ -124,12 +127,12 @@ public class AwbDaolmpl implements AwbDao {
 				+ "&password=" + BYConstants.LOGISTIC_PASSWORD
 				+ "&json_input=[" + "{" + "\"ACTUAL_WEIGHT\":\"5\","
 				+ "\"AWB_NUMBER\":\"" + awbNumber + "\","
-				+ "\"BREADTH\":\"0\"," + "\"COLLECTABLE_VALUE\":\" 3000 \","
+				+ "\"BREADTH\":\"0\"," + "\"COLLECTABLE_VALUE\":\" "+amount+" \","
 				+ "\"CONSIGNEE\":\"" + firstName + " " + lastName + "\","
 				+ "\"CONSIGNEE_ADDRESS1\":\"" + addressLine1 + "\","
 				+ "\"CONSIGNEE_ADDRESS2\":\"" + addressLine2 + "\","
 				+ "\"CONSIGNEE_ADDRESS3\":\"" + city + "\","
-				+ "\"DECLARED_VALUE\":\" 3000 \","
+				+ "\"DECLARED_VALUE\":\" "+amount+" \","
 				+ "\"DESTINATION_CITY\":\"MUMBAI\"," + "\"HEIGHT\":\"0\","
 				+ "\"ITEM_DESCRIPTION\":\"\"," + "\"LENGTH\":\" 0\","
 				+ "\"MOBILE\":\"" + phone + "\"," + "\"ORDER_NUMBER\":\"\","
