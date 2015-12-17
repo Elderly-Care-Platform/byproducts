@@ -1,56 +1,156 @@
 <html>
-  <head><title>Order Confirmation Email</title></head>
-  <body background="#FFFFFF">
-  	<p>Hi Admin, New order has been placed with below mentioned item details! <!-- a th:href="@{https://www.fedex.com/apps/fedextrack/(action='track', trackingnumber=${orderTrackingInfo.trackingNumber})}" target="_blank"><span th:text="${orderTrackingInfo.trackingNumber}"></span></a> --></p>
-
-<img style="max-height:300px;max-width:300px" th:src="*{''+barcodeImgData}" alt="" />
-
-<p><span style="font-size:14px;"><strong>Details:</strong></span></p>
-
-<p><strong></strong><span style="line-height: 1.6em; font-size: 11px;">Date: <span th:text="${order.submitDate}"></span></span></p>
-
-<p><span style="line-height: 1.6em; font-size: 11px;"></span><span style="font-size: 11px; line-height: 1.6em;">Sold By: BeautifulYears Technologies &amp; Services Pvt. Ltd.</span></p>
-
-<p><span style="font-size: 11px; line-height: 1.6em;"></span><span style="font-size: 11px; line-height: 1.6em;">Address: No.48, 2nd main, Koramangala 1st block, Bengaluru  - 560034</span></p>
-<p><span style="font-size: 11px; line-height: 1.6em;"></span><span style="font-size: 11px; line-height: 1.6em;">TIN/CST NO : 29431300594</span></p>
-
-<p><span style="font-size:14px;"><strong>Shipping Address:</strong></span></p>
-
-<p><span style="font-size:11px;"><span th:text="${name}"></span></span></p>
-
-<p><span style="font-size:11px;"><span th:text="${address1}"></span></span></p>
-
-<p><span style="font-size:11px;"><span th:text="${address2}"></span></span></p>
-
-<p><span style="font-size:11px;">India</span></p>
-
-<p><br />
-<span style="font-size:14px;"><strong>Customer Details: </strong></span></p>
-
-<p>Name: <span th:text="${name}"></span></p>
-
-<p>&nbsp;</p>
-
-<p><strong><span style="font-size:14px;">Order Details:</span></strong></p>
+    <head>
+        <title>Order Confirmation Email</title>
+    </head>
+    <body background="#FFFFFF">
+        <p>Hi Admin, New order has been placed with below mentioned item details! 
+            <!-- a th:href="@{https://www.fedex.com/apps/fedextrack/(action='track', trackingnumber=${orderTrackingInfo.trackingNumber})}" target="_blank"><span th:text="${orderTrackingInfo.trackingNumber}"></span></a> -->
+        </p>
+        <img style="max-height:300px;max-width:300px" th:src="*{''+orderItem.barCodeImageDataPath}" alt="" />
+        <p>
+            <span style="font-size:14px;">
+                <strong>Details:</strong>
+            </span>
+        </p>
+        <p>
+            <strong></strong>
+            <span style="line-height: 1.6em; font-size: 11px;">Date: 
+                <span th:text="${order.submitDate}"></span>
+            </span>
+        </p>
+        <p>
+            <span style="line-height: 1.6em; font-size: 11px;"></span>
+            <span style="font-size: 11px; line-height: 1.6em;">Sold By: BeautifulYears Technologies &amp; Services Pvt. Ltd.</span>
+        </p>
+        <p>
+            <span style="font-size: 11px; line-height: 1.6em;"></span>
+            <span style="font-size: 11px; line-height: 1.6em;">Address: No.48, 2nd main, Koramangala 1st block, Bengaluru  - 560034</span>
+        </p>
+        <p>
+            <span style="font-size: 11px; line-height: 1.6em;"></span>
+            <span style="font-size: 11px; line-height: 1.6em;">TIN/CST NO : 29431300594</span>
+        </p>
+        <p>
+            <span style="font-size:14px;">
+                <strong>Shipping Address:</strong>
+            </span>
+        </p>
+        <p>
+            <span style="font-size:11px;">
+                <span th:text="${order.customerName}"></span>
+            </span>
+        </p>
+        <p>
+            <span style="font-size:11px;">
+                <span th:text="${order.shippingAddr1}"></span>
+            </span>
+        </p>
+        <p>
+            <span style="font-size:11px;">
+                <span th:text="${order.shippingAddr2}"></span>
+            </span>
+        </p>
+        <p>
+            <span style="font-size:11px;">India</span>
+        </p>
+        <p>
+            <br />
+            <span style="font-size:14px;">
+                <strong>Customer Details: </strong>
+            </span>
+        </p>
+        <p>Name: 
+            <span th:text="${order.customerName}"></span>
+        </p>
+        <p>&nbsp;</p>
+        <p>
+            <strong>
+                <span style="font-size:14px;">Order Details:</span>
+                <p>
+                    <span style="font-size:11px;">Order Number: 
+	                            
+                        <span th:text="${order.orderNumber}"></span>
+                    </span>
+                </p>
+                <p>
+                    <span style="font-size:11px;">Order Payment Type: 
+	                            
+                        <span th:text="${order.orderPaymentType}"></span>
+                    </span>
+                </p>
+            </strong>
+        </p>
 &nbsp;
 
-<p><span style="font-size:12px;"><span style="color: rgb(0, 0, 0); font-family: century_gothic; font-weight: bold; line-height: 27.2px; background-color: rgb(249, 249, 249);"><span th:text="${orderItem.name}"></span></span></span></p>
-<p><span style="font-size:11px;">ProductId: <span th:text="${orderItem.id}"></span></span></p>
-<p><span style="font-size:11px;">AWB Number: <span th:text="${awbNumber}"></span></span></p>
-<p style="line-height: 20.8px;"><span style="font-size:11px;">Quantity: <span th:text="${orderItem.quantity}"></span></span></p>
-<p style="line-height: 20.8px;"><span style="font-size:11px;">Amount:&nbsp;<span class="ng-binding" style="box-sizing: border-box; font-weight: 700; color: rgb(0, 0, 0); font-family: century_gothic; line-height: 24px; border-radius: 0px !important; background-color: rgb(249, 249, 249);"><span th:text="${orderItem.price}"></span></span></span></p>
 
-<p><span style="line-height: 20.8px;">For any assistance with your order please call us at&nbsp;</span><a href="tel:08069400333" style="line-height: 20.8px;">080-6940-0333</a><span style="line-height: 20.8px;">&nbsp;or email us at&nbsp;</span><a href="mailto:writetous@beautifulyears.com" style="line-height: 20.8px;">writetous@beautifulyears.com</a><span style="line-height: 20.8px;">.</span></p>
-
-<p><span style="font-size: 8px; line-height: 1.6em;">Disclaimer:</span></p>
-
-<p><span style="font-size:8px;"></span><span style="font-size: 8px; line-height: 1.6em;">The goods sold as part of this shipment are intended for end user consumption/retial sale are not for re-sale.</span></p>
-
-<p><span style="font-size:8px;">E.&amp;O.E., Subject to Bangalore jurisdiction</span></p>
-
-<p style="text-align: center;"><span style="font-size:8px;"><u style="font-size: 10px; line-height: 1.6em;"><strong>Registered Address</strong></u><span style="line-height: 1.6em;">:&nbsp;</span></span></p>
-
-<p style="text-align: center;"><span style="font-size:8px;">Beautifulyears Technologies &amp; Services Pvt. Ltd., &nbsp;<span style="line-height: 1.6em;">NO E 413 V M Meadows Apartment, Horamavu, Bangalore - 560043</span></span></p>
-
-  </body>
+        <p>
+            <span style="font-size:12px;">
+                <span style="color: rgb(0, 0, 0); font-family: century_gothic; font-weight: bold; line-height: 27.2px; background-color: rgb(249, 249, 249);">
+                    <span th:text="${orderItem.itemName}"></span>
+                </span>
+            </span>
+        </p>
+        <p>
+            <span style="font-size:11px;">ProductId: 
+                            
+                <span th:text="${orderItem.itemId}"></span>
+            </span>
+        </p>
+        <p style="line-height: 20.8px;">
+            <span style="font-size:11px;">Quantity: 
+                            
+                <span th:text="${orderItem.quantity}"></span>
+            </span>
+        </p>
+        <p style="line-height: 20.8px;">
+            <span style="font-size:11px;">Delivery Charges: 
+                            
+                <span th:text="${orderItem.deliveryCharge}"></span>
+            </span>
+        </p>
+        <p style="line-height: 20.8px;">
+            <span style="font-size:11px;">Tax Amount: 
+                            
+                <span th:text="${orderItem.taxAmount}"></span>
+            </span>
+        </p>
+        <p style="line-height: 20.8px;">
+            <span style="font-size:11px;">Amount:&nbsp;
+                            
+                <span class="ng-binding" style="box-sizing: border-box; font-weight: 700; color: rgb(0, 0, 0); font-family: century_gothic; line-height: 24px; border-radius: 0px !important; background-color: rgb(249, 249, 249);">
+                    <span th:text="${orderItem.price}"></span>
+                </span>
+            </span>
+        </p>
+        <p>
+            <span style="line-height: 20.8px;">For any assistance with your order please call us at&nbsp;</span>
+            <a href="tel:08069400333" style="line-height: 20.8px;">080-6940-0333</a>
+            <span style="line-height: 20.8px;">&nbsp;or email us at&nbsp;</span>
+            <a href="mailto:writetous@beautifulyears.com" style="line-height: 20.8px;">writetous@beautifulyears.com</a>
+            <span style="line-height: 20.8px;">.</span>
+        </p>
+        <p>
+            <span style="font-size: 8px; line-height: 1.6em;">Disclaimer:</span>
+        </p>
+        <p>
+            <span style="font-size:8px;"></span>
+            <span style="font-size: 8px; line-height: 1.6em;">The goods sold as part of this shipment are intended for end user consumption/retial sale are not for re-sale.</span>
+        </p>
+        <p>
+            <span style="font-size:8px;">E.&amp;O.E., Subject to Bangalore jurisdiction</span>
+        </p>
+        <p style="text-align: center;">
+            <span style="font-size:8px;">
+                <u style="font-size: 10px; line-height: 1.6em;">
+                    <strong>Registered Address</strong>
+                </u>
+                <span style="line-height: 1.6em;">:&nbsp;</span>
+            </span>
+        </p>
+        <p style="text-align: center;">
+            <span style="font-size:8px;">Beautifulyears Technologies &amp; Services Pvt. Ltd., &nbsp;
+                <span style="line-height: 1.6em;">NO E 413 V M Meadows Apartment, Horamavu, Bangalore - 560043</span>
+            </span>
+        </p>
+    </body>
 </html>

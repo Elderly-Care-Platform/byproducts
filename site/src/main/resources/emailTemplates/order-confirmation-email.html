@@ -45,17 +45,17 @@
                     </p>
                     <p>
                         <span style="font-size:11px;">
-                            <span th:text="${name}"></span>
+                            <span th:text="${order.customerName}"></span>
                         </span>
                     </p>
                     <p>
                         <span style="font-size:11px;">
-                            <span th:text="${address1}"></span>
+                            <span th:text="${order.shippingAddr1}"></span>
                         </span>
                     </p>
                     <p>
                         <span style="font-size:11px;">
-                            <span th:text="${address2}"></span>
+                            <span th:text="${order.shippingAddr2}"></span>
                         </span>
                     </p>
                     <p>
@@ -71,7 +71,7 @@
                     </span>
                 </p>
                 <p>Name: 
-                    <span th:text="${name}"></span>
+                    <span th:text="${order.customerName}"></span>
                 </p>
             </td>
         </tr>
@@ -80,24 +80,44 @@
                 <p>
                     <strong>
                         <span style="font-size:14px;">Order Details:</span>
+                        <p>
+	                        <span style="font-size:11px;">Order Number: 
+	                            <span th:text="${order.orderNumber}"></span>
+	                        </span>
+                    	</p>
+                    	<p>
+	                        <span style="font-size:11px;">Order Payment Type: 
+	                            <span th:text="${order.orderPaymentType}"></span>
+	                        </span>
+                    	</p>
                     </strong>
                 </p>
                 <div th:each="orderItem : ${order.orderItems}">
                     <p>
                         <span style="font-size:12px;">
                             <span style="color: rgb(0, 0, 0); font-family: century_gothic; font-weight: bold; line-height: 27.2px; background-color: rgb(249, 249, 249);">
-                                <span th:text="${orderItem.name}"></span>
+                                <span th:text="${orderItem.itemName}"></span>
                             </span>
                         </span>
                     </p>
                     <p>
                         <span style="font-size:11px;">ProductId: 
-                            <span th:text="${orderItem.id}"></span>
+                            <span th:text="${orderItem.itemId}"></span>
                         </span>
                     </p>
                     <p style="line-height: 20.8px;">
                         <span style="font-size:11px;">Quantity: 
                             <span th:text="${orderItem.quantity}"></span>
+                        </span>
+                    </p>
+                    <p style="line-height: 20.8px;">
+                        <span style="font-size:11px;">Delivery Charges: 
+                            <span th:text="${orderItem.deliveryCharge}"></span>
+                        </span>
+                    </p>
+                    <p style="line-height: 20.8px;">
+                        <span style="font-size:11px;">Tax Amount: 
+                            <span th:text="${orderItem.taxAmount}"></span>
                         </span>
                     </p>
                     <p style="line-height: 20.8px;">
@@ -118,13 +138,15 @@
                     </p>
                     <p style="text-align: right;">
                         <span style="font-size:11px;">
-                            <strong>VAT:</strong> 10%
+                            <strong>Total Tax:
+                            	<span th:text="${order.totalTax}"></span>	
+                            </strong> 
                         </span>
                     </p>
                     <p style="text-align: right;">
                         <span style="font-size:11px;">
                             <strong>Shipping:</strong>
-                            <span th:text="${order.totalFulfillmentCharges}"></span>
+                            <span th:text="${order.totalDeliveryCharges}"></span>
                         </span>
                     </p>
                     <p style="text-align: right;">
@@ -144,21 +166,19 @@
             <span style="line-height: 20.8px;">.</span>
         </p>
         <p>
-            <span style="font-size: 8px; line-height: 1.6em;">Disclaimer:</span>
+            <span style="font-size: 12px;">Disclaimer:</span>
         </p>
         <p>	
-            <span style="font-size:8px;"></span>
-            <span style="font-size: 8px; line-height: 1.6em;">The goods sold as part of this shipment are intended for end user consumption/retial sale are not for re-sale.</span>
+            <span style="font-size: 12px;">The goods sold as part of this shipment are intended for end user consumption/retial sale are not for re-sale.</span>
         </p>
         <p>
-            <span style="font-size:8px;">E.&amp;O.E., Subject to Bangalore jurisdiction</span>
+            <span style="font-size:12px;">E.&amp;O.E., Subject to Bangalore jurisdiction</span>
         </p>
         <p style="text-align: center;">
             <span style="font-size:8px;">
-                <u style="font-size: 10px; line-height: 1.6em;">
+                <u style="font-size: 10px;">
                     <strong>Registered Address</strong>
                 </u>
-                <span style="line-height: 1.6em;">:&nbsp;</span>
             </span>
         </p>
         <p style="text-align: center;">
