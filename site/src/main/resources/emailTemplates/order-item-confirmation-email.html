@@ -2,160 +2,211 @@
     <head>
         <title>Order Confirmation Email</title>
     </head>
-    <body background="#FFFFFF">
-        <p>Hi Admin, New order has been placed with below mentioned item details! 
-            <!-- a th:href="@{https://www.fedex.com/apps/fedextrack/(action='track', trackingnumber=${orderTrackingInfo.trackingNumber})}" target="_blank"><span th:text="${orderTrackingInfo.trackingNumber}"></span></a> -->
-        </p>
-        <img style="max-height:300px;max-width:300px" th:src="*{''+orderItem.barCodeImageDataPath}" alt="" />
-        <p>
-            <span style="font-size:14px;">
-                <strong>Details:</strong>
-            </span>
-        </p>
-        <p>
-            <strong></strong>
-            <span style="line-height: 1.6em; font-size: 11px;">Date: 
-                <span th:text="${order.submitDate}"></span>
-            </span>
-        </p>
-        <p>
-            <span style="line-height: 1.6em; font-size: 11px;"></span>
-            <span style="font-size: 11px; line-height: 1.6em;">Sold By: BeautifulYears Technologies &amp; Services Pvt. Ltd.</span>
-        </p>
-        <p>
-            <span style="font-size: 11px; line-height: 1.6em;"></span>
-            <span style="font-size: 11px; line-height: 1.6em;">Address: No.48, 2nd main, Koramangala 1st block, Bengaluru  - 560034</span>
-        </p>
-        <p>
-            <span style="font-size: 11px; line-height: 1.6em;"></span>
-            <span style="font-size: 11px; line-height: 1.6em;">TIN/CST NO : 29431300594</span>
-        </p>
-        <p>
-            <span style="font-size:14px;">
-                <strong>Shipping Address:</strong>
-            </span>
-        </p>
-        <p>
-            <span style="font-size:11px;">
-                <span th:text="${order.customerName}"></span>
-            </span>
-        </p>
-        <p>
-            <span style="font-size:11px;">
-                <span th:text="${order.shippingAddr1}"></span>
-            </span>
-        </p>
-        <p>
-            <span style="font-size:11px;">
-                <span th:text="${order.shippingAddr2}"></span>
-            </span>
-        </p>
-        <p>
-            <span style="font-size:11px;">India</span>
-        </p>
-        <p>
-            <br />
-            <span style="font-size:14px;">
-                <strong>Customer Details: </strong>
-            </span>
-        </p>
-        <p>Name: 
-            <span th:text="${order.customerName}"></span>
-        </p>
-        <p>&nbsp;</p>
-        <p>
-            <strong>
-                <span style="font-size:14px;">Order Details:</span>
-                <p>
-                    <span style="font-size:11px;">Order Number: 
-	                            
-                        <span th:text="${order.orderNumber}"></span>
-                    </span>
-                </p>
-                <p>
-                    <span style="font-size:11px;">Order Payment Type: 
-	                            
-                        <span th:text="${order.orderPaymentType}"></span>
-                    </span>
-                </p>
-            </strong>
-        </p>
-&nbsp;
-
-
-        <p>
-            <span style="font-size:12px;">
-                <span style="color: rgb(0, 0, 0); font-family: century_gothic; font-weight: bold; line-height: 27.2px; background-color: rgb(249, 249, 249);">
-                    <span th:text="${orderItem.itemName}"></span>
-                </span>
-            </span>
-        </p>
-        <p>
-            <span style="font-size:11px;">ProductId: 
-                            
-                <span th:text="${orderItem.itemId}"></span>
-            </span>
-        </p>
-        <p>
-            <span style="font-size:11px;">AWB Number: 
-                <span th:text="${orderItem.awbNumber}"></span>
-            </span>
-         </p>
-        <p style="line-height: 20.8px;">
-            <span style="font-size:11px;">Quantity: 
-                            
-                <span th:text="${orderItem.quantity}"></span>
-            </span>
-        </p>
-        <p style="line-height: 20.8px;">
-            <span style="font-size:11px;">Delivery Charges: 
-                            
-                <span th:text="${orderItem.deliveryCharge}"></span>
-            </span>
-        </p>
-        <p style="line-height: 20.8px;">
-            <span style="font-size:11px;">Tax Amount: 
-                            
-                <span th:text="${orderItem.taxAmount}"></span>
-            </span>
-        </p>
-        <p style="line-height: 20.8px;">
-            <span style="font-size:11px;">Amount:&nbsp;
-                            
-                <span class="ng-binding" style="box-sizing: border-box; font-weight: 700; color: rgb(0, 0, 0); font-family: century_gothic; line-height: 24px; border-radius: 0px !important; background-color: rgb(249, 249, 249);">
-                    <span th:text="${orderItem.price}"></span>
-                </span>
-            </span>
-        </p>
-        <p>
-            <span style="line-height: 20.8px;">For any assistance with your order please call us at&nbsp;</span>
-            <a href="tel:08069400333" style="line-height: 20.8px;">080-6940-0333</a>
-            <span style="line-height: 20.8px;">&nbsp;or email us at&nbsp;</span>
-            <a href="mailto:writetous@beautifulyears.com" style="line-height: 20.8px;">writetous@beautifulyears.com</a>
-            <span style="line-height: 20.8px;">.</span>
-        </p>
-        <p>
-            <span style="font-size: 8px; line-height: 1.6em;">Disclaimer:</span>
-        </p>
-        <p>
-            <span style="font-size:8px;"></span>
-            <span style="font-size: 8px; line-height: 1.6em;">The goods sold as part of this shipment are intended for end user consumption/retial sale are not for re-sale.</span>
-        </p>
-        <p>
-            <span style="font-size:8px;">E.&amp;O.E., Subject to Bangalore jurisdiction</span>
-        </p>
-        <p style="text-align: center;">
-            <span style="font-size:8px;">
-                <u style="font-size: 10px; line-height: 1.6em;">
-                    <strong>Registered Address</strong>
-                </u>
-                <span style="line-height: 1.6em;">:&nbsp;</span>
-            </span>
-        </p>
-        <p style="text-align: center;">
-            <span style="font-size:8px;">Beautifulyears Technologies &amp; Services Pvt. Ltd., &nbsp;
-                <span style="line-height: 1.6em;">NO E 413 V M Meadows Apartment, Horamavu, Bangalore - 560043</span>
-            </span>
-        </p>
-    </body>
+    <body>
+    <table width="600" border="0" cellspacing="0" cellpadding="0" align="center" bgcolor="#ffffff" style="font-family:Arial; font-size:12px; color:#000000; line-height:20px;">
+        <tr height="10"></tr>
+        <tr>
+            <td align="center">
+                <a href="http://beautifulyears.com/">
+                    <img src="http://beautifulyears.com/assets/img/home/logo.png" width="225" border="0" align="center" />
+                </a>
+            </td>
+        </tr>
+        <tr height="20"></tr>
+        <tr height="1">
+            <td width="100%" bgcolor="#dddddd"></td>
+        </tr>
+        <tr height="20"></tr>
+        <tr>
+            <td >
+                Hi Admin, <br/>
+                New order has been placed with below mentioned item details! 
+            </td>
+        </tr>
+        <tr height="20"></tr>
+        <tr>
+            <td>
+                <table width="100%" style="border:1px solid #dddddd;" cellspacing="0" cellpadding="0" align="center">
+                    <tr height="15"></tr>
+                    <tr>
+                        <td align="center">
+                            <img alt="" th:src="*{''+orderItem.barCodeImageDataPath}" max-width="300" max-height="300"  border="0"/>
+                        </td>
+                    </tr>
+                    <tr height="15"></tr>
+                </table>
+            </td>
+        </tr>
+        <tr height="30"></tr>
+        <tr>
+            <td>
+                <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+                    <tr>
+                        <td align="left" width="48%" valign="top">
+                             <table width="100%" border="0" cellspacing="0" cellpadding="0" align="left">
+                                <tr>
+                                    <td>
+                                        <strong>Seller Details:</strong>
+                                    </td>
+                                </tr>
+                                <tr height="5"></tr>
+                                <tr height="1">
+                                    <td width="100%" bgcolor="#dddddd"></td>
+                                </tr>
+                                <tr height="10"></tr>
+                                <tr>
+                                    <td>
+                                        <strong>Date: </strong> <span th:text="${order.submitDate}"></span><br/>
+                                        <strong>Sold By: </strong> BeautifulYears Technologies &amp; Services Pvt. Ltd.<br/>
+                                        <strong>Address: </strong> No.48, 2nd main, Koramangala 1st block, Bengaluru  - 560034<br/>
+                                        <strong>TIN/CST NO : </strong> 29431300594
+                                    </td>
+                                </tr>
+                             </table>
+                        </td>
+                        <td align="left" width="4%"></td>
+                        <td align="left" width="48%" valign="top">
+                            <table width="100%" border="0" cellspacing="0" cellpadding="0" align="left">
+                                <tr>
+                                    <td>
+                                        <strong>Shipping Address:</strong>
+                                    </td>
+                                </tr>
+                                <tr height="5"></tr>
+                                <tr height="1">
+                                    <td width="100%" bgcolor="#dddddd"></td>
+                                </tr>
+                                <tr height="10"></tr>
+                                <tr>
+                                    <td>
+                                        <strong><span th:text="${order.customerName}"></span></strong> <br/>
+                                        <span th:text="${order.shippingAddr1}"></span> ,<br/> <span th:text="${order.shippingAddr2}"></span>, India
+                                    </td>
+                                </tr>
+                             </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr height="30"></tr>
+        <tr>
+            <td>
+                <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+                    <tr>
+                        <td align="left" width="48%" valign="top">
+                             <table width="100%" border="0" cellspacing="0" cellpadding="0" align="left">
+                                <tr>
+                                    <td>
+                                        <strong>Customer Details:</strong>
+                                    </td>
+                                </tr>
+                                <tr height="5"></tr>
+                                <tr height="1">
+                                    <td width="100%" bgcolor="#dddddd"></td>
+                                </tr>
+                                <tr height="10"></tr>
+                                <tr>
+                                    <td>
+                                        <strong>Name:</strong> <span th:text="${order.customerName}"></span>
+                                    </td>
+                                </tr>
+                             </table>
+                        </td>
+                        <td align="left" width="4%"></td>
+                        <td align="left" width="48%" valign="top">
+                            <table width="100%" border="0" cellspacing="0" cellpadding="0" align="left">
+                                <tr>
+                                    <td>
+                                        <strong>Order Details:</strong>
+                                    </td>
+                                </tr>
+                                <tr height="5"></tr>
+                                <tr height="1">
+                                    <td width="100%" bgcolor="#dddddd"></td>
+                                </tr>
+                                <tr height="10"></tr>
+                                <tr>
+                                    <td>
+                                        <strong><span th:text="${orderItem.itemName}"></span></strong><br/>
+                                        ProductId: <span th:text="${orderItem.itemId}"></span></span><br/>
+                                        AWB Number:  <span th:text="${orderItem.awbNumber}"></span><br/>
+                                        Quantity:  <span th:text="${orderItem.quantity}"></span><br/>
+                                        Order Number: <span th:text="${order.orderNumber}"></span><br/>
+                                        Order Payment Type:  <span th:text="${order.orderPaymentType}"></span>
+                                        <br/>
+                                        Delivery Charges:  <span th:text="${orderItem.deliveryCharge}"></span>
+                                        <br/>
+                                        Tax Amount: <span th:text="${orderItem.taxAmount}"></span>
+                                        <br/>
+                                        Amount: <strong><span th:text="${orderItem.price}"></span></strong>
+                                    </td>
+                                </tr>
+                             </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr height="20"></tr>
+        <tr>
+            <td>
+                <table width="100%" style="border:1px solid #dddddd;" cellspacing="0" cellpadding="0" align="center">
+                    <tr height="15"></tr>
+                    <tr>
+                        <td align="left" width="3%"></td>
+                        <td align="left" width="94%">
+                            For any assistance with your order<br/>
+                            Please call us at <strong>080-6940-0333</strong> or email us at <strong><a href="mailto:contactus@beautifulyears.com" style="color:#000000; text-decoration:none;" target="_blank">writetous@beautifulyears.com</a></strong>
+                        </td>
+                         <td align="left" width="3%"></td>
+                    </tr>
+                    <tr height="15"></tr>
+                </table>
+            </td>
+        </tr>
+        <tr height="20"></tr>
+        <tr>
+            <td>
+                <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center" style="font-size:10px; line-height:15px;">
+                    <tr>
+                        <td align="left" width="48%" valign="top">
+                             <table width="100%" border="0" cellspacing="0" cellpadding="0" align="left">
+                                <tr>
+                                    <td>
+                                        Disclaimer:
+                                    </td>
+                                </tr>
+                                <tr height="1"></tr>
+                                <tr>
+                                    <td>
+                                        The goods sold as part of this shipment are intended for end user consumption/retial sale are not for re-sale.<br/>
+                                        E.&amp;O.E., Subject to Bangalore jurisdiction
+                                    </td>
+                                </tr>
+                             </table>
+                        </td>
+                        <td align="left" width="4%"></td>
+                        <td align="left" width="48%" valign="top">
+                            <table width="100%" border="0" cellspacing="0" cellpadding="0" align="left">
+                                <tr>
+                                    <td>
+                                        Registered Address
+                                    </td>
+                                </tr>
+                                <tr height="1"></tr>
+                                <tr>
+                                    <td>
+                                        Beautifulyears Technologies &amp; Services Pvt. Ltd., NO E 413 V M Meadows Apartment, Horamavu, Bangalore - 560043
+                                    </td>
+                                </tr>
+                             </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr height="10"></tr>
+    </table>
+</body>
 </html>
