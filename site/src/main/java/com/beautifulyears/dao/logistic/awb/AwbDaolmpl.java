@@ -94,6 +94,8 @@ public class AwbDaolmpl implements AwbDao {
 		System.out.println("lastName = " + lastName);
 		String city = order.getOrderAttributes().get("City").getValue();
 		System.out.println("city = " + city);
+		String postalCode = order.getOrderAttributes().get("PostalCode").getValue();
+		System.out.println("postalCode = " + postalCode);
 		String phone = order.getOrderAttributes().get("Phone").getValue();
 		System.out.println("phone = " + phone);
 		String orderType = order.getOrderAttributes().get("deliveryType")
@@ -133,9 +135,9 @@ public class AwbDaolmpl implements AwbDao {
 				+ "\"CONSIGNEE_ADDRESS2\":\"" + addressLine2 + "\","
 				+ "\"CONSIGNEE_ADDRESS3\":\"" + city + "\","
 				+ "\"DECLARED_VALUE\":\" "+amount+" \","
-				+ "\"DESTINATION_CITY\":\"MUMBAI\"," + "\"HEIGHT\":\"0\","
+				+ "\"DESTINATION_CITY\":\""+city+"\"," + "\"HEIGHT\":\"0\","
 				+ "\"ITEM_DESCRIPTION\":\"\"," + "\"LENGTH\":\" 0\","
-				+ "\"MOBILE\":\"" + phone + "\"," + "\"ORDER_NUMBER\":\"\","
+				+ "\"MOBILE\":\"" + phone + "\"," + "\"ORDER_NUMBER\":\""+order.getOrderNumber()+"\","
 				+ "\"PICKUP_ADDRESS_LINE1\":\""
 				+ pickupAddress.getAddressLine1() + "\","
 				+ "\"PICKUP_ADDRESS_LINE2\":\""
@@ -146,7 +148,7 @@ public class AwbDaolmpl implements AwbDao {
 				+ "\"PICKUP_PHONE\":\""
 				+ pickupAddress.getPhonePrimary().getPhoneNumber() + "\","
 				+ "\"PICKUP_PINCODE\":\"" + pickupAddress.getPostalCode()
-				+ "\"," + "\"PIECES\":\"1\"," + "\"PINCODE\":\"400067\","
+				+ "\"," + "\"PIECES\":\"1\"," + "\"PINCODE\":\""+postalCode+"\","
 				+ "\"PRODUCT\":\"" + orderType + "\","
 				+ "\"RETURN_ADDRESS_LINE1\":\""
 				+ pickupAddress.getAddressLine1() + "\","
@@ -155,7 +157,7 @@ public class AwbDaolmpl implements AwbDao {
 				+ "\"RETURN_MOBILE\":\""
 				+ pickupAddress.getPhonePrimary().getPhoneNumber() + "\","
 				+ "\"RETURN_NAME\":\"abcde\"," + "\"RETURN_PHONE\":\""
-				+ pickupAddress.getPhonePrimary() + "\","
+				+ pickupAddress.getPhonePrimary().getPhoneNumber() + "\","
 				+ "\"RETURN_PINCODE\":\"" + pickupAddress.getPostalCode()
 				+ "\"," + "\"STATE\":\"" + pickupAddress.getState().getName()
 				+ "\"," + "\"TELEPHONE\":\"" + phone + "\","

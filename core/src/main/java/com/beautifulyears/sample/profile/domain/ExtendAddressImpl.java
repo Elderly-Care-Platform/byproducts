@@ -66,6 +66,7 @@ public class ExtendAddressImpl extends AddressImpl implements ExtendAddress {
 		addressMap.put("AddressLine1", this.getAddressLine1());
 		addressMap.put("AddressLine2", this.getAddressLine2());
 		addressMap.put("City", this.getCity());
+		addressMap.put("PostalCode", this.getPostalCode());
 		// addressMap.put("Country", this.getCounty());
 		addressMap.put("Email", this.getPrimaryEmail());
 		if (null != this.getPhonePrimary()) {
