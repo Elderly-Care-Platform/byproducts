@@ -137,7 +137,7 @@ public class AwbDaolmpl implements AwbDao {
 				+ "\"DECLARED_VALUE\":\" "+amount+" \","
 				+ "\"DESTINATION_CITY\":\""+city+"\"," + "\"HEIGHT\":\"0\","
 				+ "\"ITEM_DESCRIPTION\":\"\"," + "\"LENGTH\":\" 0\","
-				+ "\"MOBILE\":\"" + phone + "\"," + "\"ORDER_NUMBER\":\""+order.getOrderNumber()+"\","
+				+ "\"MOBILE\":\"" + phone + "\"," + "\"ORDER_NUMBER\":\"\","
 				+ "\"PICKUP_ADDRESS_LINE1\":\""
 				+ pickupAddress.getAddressLine1() + "\","
 				+ "\"PICKUP_ADDRESS_LINE2\":\""
