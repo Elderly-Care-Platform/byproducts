@@ -42,14 +42,14 @@ public class PickUpAddressConfig implements BroadleafEnumerationType {
 	public static final PickUpAddressConfig PRAJWAL_SURGICALS = new PickUpAddressConfig(
 			"Prajwal surgicals", new ExtendAddressImpl(
 					"Shop No. 1033, 19th E Main Road",// addressLiine1
-					" 1st N Block, Rajaji Nagar,19th Main Rd, Nagapura,",// addressLine2
+					"1st N Block, Rajaji Nagar,19th Main Rd, Nagapura,",// addressLine2
 					"",// addressLine3
 					"Bengaluru",// city
 					"Karnataka ",// state
 					"India",// country
 					"560010",// pin code
 					"Salesenquiry@prajwalsurgicals.com",// email
-					"Prajwal surgicals & scientifics",// firstName
+					"Prajwal surgicals and scientifics",// firstName
 					"",// lastName
 					"9953361115",// phne
 					"Salesenquiry@prajwalsurgicals.com",// primaryEmail
