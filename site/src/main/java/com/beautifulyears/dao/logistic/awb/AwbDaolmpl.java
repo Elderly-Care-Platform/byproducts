@@ -115,7 +115,7 @@ public class AwbDaolmpl implements AwbDao {
 					.get(((ExtendProductImpl) ((DiscreteOrderItem) item)
 							.getProduct()).getPickupAddressCode());
 
-			if (null != pickupAddress) {
+			if (null == pickupAddress) {
 				pickupAddress = PickUpAddressConfig.PICKUP_ADDRESS_MAP
 						.get(PickUpAddressConfig.SELF.getType());
 			}
