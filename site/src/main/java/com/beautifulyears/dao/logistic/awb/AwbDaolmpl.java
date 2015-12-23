@@ -94,7 +94,8 @@ public class AwbDaolmpl implements AwbDao {
 		System.out.println("lastName = " + lastName);
 		String city = order.getOrderAttributes().get("City").getValue();
 		System.out.println("city = " + city);
-		String postalCode = order.getOrderAttributes().get("PostalCode").getValue();
+		String postalCode = order.getOrderAttributes().get("PostalCode")
+				.getValue();
 		System.out.println("postalCode = " + postalCode);
 		String phone = order.getOrderAttributes().get("Phone").getValue();
 		System.out.println("phone = " + phone);
@@ -103,7 +104,9 @@ public class AwbDaolmpl implements AwbDao {
 		System.out.println("orderType = " + orderType);
 		ExtendProductImpl product = (ExtendProductImpl) ((DiscreteOrderItem) item)
 				.getProduct();
-		Integer amount = Integer.valueOf(item.getTotalPrice().getAmount().intValue()) + product.getProductDeliveryCharges();
+		Integer amount = Integer.valueOf(item.getTotalPrice().getAmount()
+				.intValue())
+				+ product.getProductDeliveryCharges();
 		ExtendAddressImpl pickupAddress = null;
 
 		if (item instanceof DiscreteOrderItem
@@ -129,16 +132,16 @@ public class AwbDaolmpl implements AwbDao {
 				+ "&password=" + BYConstants.LOGISTIC_PASSWORD
 				+ "&json_input=[" + "{" + "\"ACTUAL_WEIGHT\":\"5\","
 				+ "\"AWB_NUMBER\":\"" + awbNumber + "\","
-				+ "\"BREADTH\":\"0\"," + "\"COLLECTABLE_VALUE\":\" "+amount+" \","
-				+ "\"CONSIGNEE\":\"" + firstName + " " + lastName + "\","
-				+ "\"CONSIGNEE_ADDRESS1\":\"" + addressLine1 + "\","
+				+ "\"BREADTH\":\"0\"," + "\"COLLECTABLE_VALUE\":\" " + amount
+				+ " \"," + "\"CONSIGNEE\":\"" + firstName + " " + lastName
+				+ "\"," + "\"CONSIGNEE_ADDRESS1\":\"" + addressLine1 + "\","
 				+ "\"CONSIGNEE_ADDRESS2\":\"" + addressLine2 + "\","
 				+ "\"CONSIGNEE_ADDRESS3\":\"" + city + "\","
-				+ "\"DECLARED_VALUE\":\" "+amount+" \","
-				+ "\"DESTINATION_CITY\":\""+city+"\"," + "\"HEIGHT\":\"0\","
-				+ "\"ITEM_DESCRIPTION\":\"\"," + "\"LENGTH\":\" 0\","
-				+ "\"MOBILE\":\"" + phone + "\"," + "\"ORDER_NUMBER\":\"\","
-				+ "\"PICKUP_ADDRESS_LINE1\":\""
+				+ "\"DECLARED_VALUE\":\" " + amount + " \","
+				+ "\"DESTINATION_CITY\":\"" + city + "\","
+				+ "\"HEIGHT\":\"0\"," + "\"ITEM_DESCRIPTION\":\"\","
+				+ "\"LENGTH\":\" 0\"," + "\"MOBILE\":\"" + phone + "\","
+				+ "\"ORDER_NUMBER\":\"\"," + "\"PICKUP_ADDRESS_LINE1\":\""
 				+ pickupAddress.getAddressLine1() + "\","
 				+ "\"PICKUP_ADDRESS_LINE2\":\""
 				+ pickupAddress.getAddressLine2() + "\","
@@ -148,15 +151,16 @@ public class AwbDaolmpl implements AwbDao {
 				+ "\"PICKUP_PHONE\":\""
 				+ pickupAddress.getPhonePrimary().getPhoneNumber() + "\","
 				+ "\"PICKUP_PINCODE\":\"" + pickupAddress.getPostalCode()
-				+ "\"," + "\"PIECES\":\"1\"," + "\"PINCODE\":\""+postalCode+"\","
-				+ "\"PRODUCT\":\"" + orderType + "\","
+				+ "\"," + "\"PIECES\":\"1\"," + "\"PINCODE\":\"" + postalCode
+				+ "\"," + "\"PRODUCT\":\"" + orderType + "\","
 				+ "\"RETURN_ADDRESS_LINE1\":\""
 				+ pickupAddress.getAddressLine1() + "\","
 				+ "\"RETURN_ADDRESS_LINE2\":\""
 				+ pickupAddress.getAddressLine2() + "\","
 				+ "\"RETURN_MOBILE\":\""
 				+ pickupAddress.getPhonePrimary().getPhoneNumber() + "\","
-				+ "\"RETURN_NAME\":\"abcde\"," + "\"RETURN_PHONE\":\""
+				+ "\"RETURN_NAME\":\"" + pickupAddress.getFirstName() + "\","
+				+ "\"RETURN_PHONE\":\""
 				+ pickupAddress.getPhonePrimary().getPhoneNumber() + "\","
 				+ "\"RETURN_PINCODE\":\"" + pickupAddress.getPostalCode()
 				+ "\"," + "\"STATE\":\"" + pickupAddress.getState().getName()
