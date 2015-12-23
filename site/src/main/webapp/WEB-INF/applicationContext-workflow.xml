@@ -45,6 +45,10 @@
             </list>
         </property>
     </bean>
+    <bean id="blPlaceLogisticOrderRollbackHandler" class="com.beautifulyears.workflow.PlaceLogisticOrderRollbackHandler">
+    </bean>
+    <bean id="blSendOrderEmailRollbackHandler" class="com.beautifulyears.workflow.SendOrderEmailRollbackHandler">
+    </bean>
 
     <bean id="blCheckoutWorkflow" class="org.broadleafcommerce.core.workflow.SequenceProcessor">
         <property name="activities">
@@ -54,6 +58,12 @@
                 
                 <bean p:order="5010" id="blDecrementInventoryActivity" class="org.broadleafcommerce.core.checkout.service.workflow.DecrementInventoryActivity">
                     <property name="rollbackHandler" ref="blDecrementInventoryRollbackHandler" />
+                </bean>
+                <bean p:order="6500" id="blPlaceLogisticOrderActivity" class="com.beautifulyears.workflow.PlaceLogisticOrderActivity">
+                    <property name="rollbackHandler" ref="blPlaceLogisticOrderRollbackHandler" />
+                </bean>
+                <bean p:order="6600" id="blSendOrderEmailActivity" class="com.beautifulyears.workflow.SendOrderEmailActivity">
+                    <property name="rollbackHandler" ref="blSendOrderEmailRollbackHandler" />
                 </bean>
             </list>
         </property>
