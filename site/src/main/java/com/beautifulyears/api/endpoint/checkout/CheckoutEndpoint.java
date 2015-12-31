@@ -137,6 +137,15 @@ public class CheckoutEndpoint extends
   @POST
   public OrderWrapper performCheckout(@Context HttpServletRequest request,
       ExtendOrderWrapper orderWrapper) throws PricingException {
+	  int sessionType = (Integer)request.getAttribute("sessionType");
+	  
+	  if(sessionType != 0){
+		  if(sessionType == 1){
+			  throw BroadleafWebServicesException.build(500).addMessage("3010");
+		  }else{
+			  throw BroadleafWebServicesException.build(500).addMessage("3011");
+		  }
+	  }
     logger.debug("Executing method : performCheckout()");
     // Get the cart
     Order cart = CartState.getCart();
@@ -173,34 +182,34 @@ public class CheckoutEndpoint extends
         
           CheckoutResponse response = checkoutService.performCheckout(cart);
           System.out.println("System checkout done completely..trying out logistic checkout");
-          CheckoutResponse response1 = logisticCheckoutService.checkOut(cart);
+//          CheckoutResponse response1 = logisticCheckoutService.checkOut(cart);
           // Get order and wrap it
-          order = response1.getOrder();
+          order = response.getOrder();
           ExtendOrderWrapper wrapper =
               (ExtendOrderWrapper) context.getBean(ExtendOrderWrapper.class.getName());
           wrapper.wrapDetails(order, request);
 
-          // Send confirmation mail
-          ExtendEmailService emailService =
-              (ExtendEmailService) context.getBean("extendEmailService");
-          try {
-        	  if(null != address.getPrimaryEmail()){
-        		  emailService.sendOrderConfirmation(order, null, address.getPrimaryEmail());
-        	  }
-        	  for(String adminEmail : BYConstants.ADMIN_EMAILS){
-        		  emailService.sendOrderConfirmationAdmin(order, null,
-        				  adminEmail);
-        	  }
-        	  
-        	  for(OrderItem item : order.getOrderItems()){
-        		  for(String adminEmail : BYConstants.ADMIN_EMAILS){
-            		  emailService.sendOrderItemConfirmation(order, item, adminEmail);
-            	  }
-        	  }
-            
-          } catch (IOException e) {
-            e.printStackTrace();
-          }
+//          // Send confirmation mail
+//          ExtendEmailService emailService =
+//              (ExtendEmailService) context.getBean("extendEmailService");
+//          try {
+//        	  if(null != address.getPrimaryEmail()){
+//        		  emailService.sendOrderConfirmation(order, null, address.getPrimaryEmail());
+//        	  }
+//        	  for(String adminEmail : BYConstants.ADMIN_EMAILS){
+//        		  emailService.sendOrderConfirmationAdmin(order, null,
+//        				  adminEmail);
+//        	  }
+//        	  
+//        	  for(OrderItem item : order.getOrderItems()){
+//        		  for(String adminEmail : BYConstants.ADMIN_EMAILS){
+//            		  emailService.sendOrderItemConfirmation(order, item, adminEmail);
+//            	  }
+//        	  }
+//            
+//          } catch (IOException e) {
+//            e.printStackTrace();
+//          }
           return wrapper;
       } catch (CheckoutException e) {
         throw BroadleafWebServicesException.build(

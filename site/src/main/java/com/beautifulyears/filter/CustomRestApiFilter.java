@@ -99,9 +99,12 @@ public class CustomRestApiFilter extends GenericFilterBean implements Ordered {
 				try {
 
 					JSONObject json1 = new JSONObject(obj);
-					JSONObject data = json1.getJSONObject("data");
+					JSONObject session = json1.getJSONObject("data");
+					JSONObject user = session.getJSONObject("user");
+					
+					request.setAttribute("sessionType", session.getInt("sessionType"));
 
-					String customUserId = data.getString("id");
+					String customUserId = user.getString("id");
 					existingCustomer = (ExtendCustomerImpl) customerService
 							.getByCustomUserId(customUserId);
 
@@ -110,9 +113,9 @@ public class CustomRestApiFilter extends GenericFilterBean implements Ordered {
 						existingCustomer.setId((new Date()).getTime());
 					}
 
-					existingCustomer.setEmailAddress(data.getString("email"));
-					existingCustomer.setUsername(data.getString("userName"));
-					existingCustomer.setCustomUserId(data.getString("id"));
+					existingCustomer.setEmailAddress(user.getString("email"));
+					existingCustomer.setUsername(user.getString("userName"));
+					existingCustomer.setCustomUserId(user.getString("id"));
 
 					customerService.saveCustomer(existingCustomer);
 				} catch (JSONException e) {
