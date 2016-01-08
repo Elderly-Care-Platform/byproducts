@@ -146,7 +146,7 @@ public class CheckoutEndpoint extends
 			  throw BroadleafWebServicesException.build(500).addMessage("3011");
 		  }
 	  }
-    logger.debug("Executing method : performCheckout()");
+    System.out.println("---------------------------------CHECKOUT REQUEST START----------------------");
     // Get the cart
     Order cart = CartState.getCart();
     if (cart != null) {
@@ -210,8 +210,10 @@ public class CheckoutEndpoint extends
 //          } catch (IOException e) {
 //            e.printStackTrace();
 //          }
+          System.out.println("---------------------------------CHECKOUT REQUEST END----------------------");
           return wrapper;
       } catch (CheckoutException e) {
+    	  System.out.println("---------------------------------CHECKOUT REQUEST ERROR----------------------");
         throw BroadleafWebServicesException.build(
             Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).addMessage(
             BroadleafWebServicesException.CHECKOUT_PROCESSING_ERROR);

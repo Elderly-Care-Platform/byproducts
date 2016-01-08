@@ -131,40 +131,40 @@ public class AwbDaolmpl implements AwbDao {
 		String requestBody = "username=" + BYConstants.LOGISTIC_USERNAME
 				+ "&password=" + BYConstants.LOGISTIC_PASSWORD
 				+ "&json_input=[" + "{" + "\"ACTUAL_WEIGHT\":\"5\","
-				+ "\"AWB_NUMBER\":\"" + awbNumber + "\","
+				+ "\"AWB_NUMBER\":\"" + parseString(awbNumber) + "\","
 				+ "\"BREADTH\":\"0\"," + "\"COLLECTABLE_VALUE\":\" " + amount
-				+ " \"," + "\"CONSIGNEE\":\"" + firstName + " " + lastName
-				+ "\"," + "\"CONSIGNEE_ADDRESS1\":\"" + addressLine1 + "\","
-				+ "\"CONSIGNEE_ADDRESS2\":\"" + addressLine2 + "\","
-				+ "\"CONSIGNEE_ADDRESS3\":\"" + city + "\","
+				+ " \"," + "\"CONSIGNEE\":\"" + parseString(firstName) + " " + parseString(lastName)
+				+ "\"," + "\"CONSIGNEE_ADDRESS1\":\"" + parseString(addressLine1) + "\","
+				+ "\"CONSIGNEE_ADDRESS2\":\"" + parseString(addressLine2) + "\","
+				+ "\"CONSIGNEE_ADDRESS3\":\"" + parseString(city) + "\","
 				+ "\"DECLARED_VALUE\":\" " + amount + " \","
-				+ "\"DESTINATION_CITY\":\"" + city + "\","
+				+ "\"DESTINATION_CITY\":\"" + parseString(city) + "\","
 				+ "\"HEIGHT\":\"0\"," + "\"ITEM_DESCRIPTION\":\"\","
-				+ "\"LENGTH\":\" 0\"," + "\"MOBILE\":\"" + phone + "\","
+				+ "\"LENGTH\":\" 0\"," + "\"MOBILE\":\"" + parseString(phone) + "\","
 				+ "\"ORDER_NUMBER\":\"\"," + "\"PICKUP_ADDRESS_LINE1\":\""
-				+ pickupAddress.getAddressLine1() + "\","
+				+ parseString(pickupAddress.getAddressLine1()) + "\","
 				+ "\"PICKUP_ADDRESS_LINE2\":\""
-				+ pickupAddress.getAddressLine2() + "\","
+				+ parseString(pickupAddress.getAddressLine2()) + "\","
 				+ "\"PICKUP_MOBILE\":\""
-				+ pickupAddress.getPhonePrimary().getPhoneNumber() + "\","
-				+ "\"PICKUP_NAME\":\"" + pickupAddress.getFirstName() + "\","
+				+ parseString(pickupAddress.getPhonePrimary().getPhoneNumber()) + "\","
+				+ "\"PICKUP_NAME\":\"" + parseString(pickupAddress.getFirstName()) + "\","
 				+ "\"PICKUP_PHONE\":\""
-				+ pickupAddress.getPhonePrimary().getPhoneNumber() + "\","
-				+ "\"PICKUP_PINCODE\":\"" + pickupAddress.getPostalCode()
-				+ "\"," + "\"PIECES\":\"1\"," + "\"PINCODE\":\"" + postalCode
-				+ "\"," + "\"PRODUCT\":\"" + orderType + "\","
+				+ parseString(pickupAddress.getPhonePrimary().getPhoneNumber()) + "\","
+				+ "\"PICKUP_PINCODE\":\"" + parseString(pickupAddress.getPostalCode())
+				+ "\"," + "\"PIECES\":\"1\"," + "\"PINCODE\":\"" + parseString(postalCode)
+				+ "\"," + "\"PRODUCT\":\"" + parseString(orderType) + "\","
 				+ "\"RETURN_ADDRESS_LINE1\":\""
-				+ pickupAddress.getAddressLine1() + "\","
+				+ parseString(pickupAddress.getAddressLine1()) + "\","
 				+ "\"RETURN_ADDRESS_LINE2\":\""
-				+ pickupAddress.getAddressLine2() + "\","
+				+ parseString(pickupAddress.getAddressLine2()) + "\","
 				+ "\"RETURN_MOBILE\":\""
-				+ pickupAddress.getPhonePrimary().getPhoneNumber() + "\","
-				+ "\"RETURN_NAME\":\"" + pickupAddress.getFirstName() + "\","
+				+ parseString(pickupAddress.getPhonePrimary().getPhoneNumber()) + "\","
+				+ "\"RETURN_NAME\":\"" + parseString(pickupAddress.getFirstName()) + "\","
 				+ "\"RETURN_PHONE\":\""
-				+ pickupAddress.getPhonePrimary().getPhoneNumber() + "\","
-				+ "\"RETURN_PINCODE\":\"" + pickupAddress.getPostalCode()
-				+ "\"," + "\"STATE\":\"" + pickupAddress.getState().getName()
-				+ "\"," + "\"TELEPHONE\":\"" + phone + "\","
+				+ parseString(pickupAddress.getPhonePrimary().getPhoneNumber()) + "\","
+				+ "\"RETURN_PINCODE\":\"" + parseString(pickupAddress.getPostalCode())
+				+ "\"," + "\"STATE\":\"" + parseString(pickupAddress.getState().getName())
+				+ "\"," + "\"TELEPHONE\":\"" + parseString(phone) + "\","
 				+ "\"VOLUMETRIC_WEIGHT\":\"1\"" + "}" + "]";
 		System.out.println(requestBody);
 		String inputStr = (String) postQuery(url, requestBody);
@@ -283,6 +283,15 @@ public class AwbDaolmpl implements AwbDao {
 		}
 		System.out.println(inputStr);
 		return inputStr;
+	}
+	
+	private String parseString(String str){
+		if(null != str){
+			str = str.replaceAll("(\\r|\\n|\\t)", ",");
+			str = str.replaceAll("(\"|\')", ",");
+		}
+		
+		return str;
 	}
 
 }
