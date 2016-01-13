@@ -137,6 +137,7 @@ public class CheckoutEndpoint extends
   @POST
   public OrderWrapper performCheckout(@Context HttpServletRequest request,
       ExtendOrderWrapper orderWrapper) throws PricingException {
+	  System.out.println("sessionType = "+request.getAttribute("sessionType"));
 	  int sessionType = (Integer)request.getAttribute("sessionType");
 	  
 	  if(sessionType != 0){
