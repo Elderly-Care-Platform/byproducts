@@ -46,6 +46,7 @@ public class CustomRestApiFilter extends GenericFilterBean implements Ordered {
 
 		String sessionId = null;
 		String customerId = null;
+		ExtendCustomer existingCustomer = null;
 
 		HttpServletRequest request = (HttpServletRequest) servletRequest;
 
@@ -54,91 +55,122 @@ public class CustomRestApiFilter extends GenericFilterBean implements Ordered {
 		if (request.getAttribute(CustomerStateRequestProcessor
 				.getCustomerRequestAttributeName()) == null) {
 
-			// First check to see if someone already put the customerId on the
-			// request
-			if (request.getAttribute(sessionIdAttributeName) != null) {
-				sessionId = String.valueOf(request
-						.getAttribute(sessionIdAttributeName));
-				if (request.getAttribute(customerIdAttributeName) != null) {
-					customerId = String.valueOf(request
-							.getAttribute(customerIdAttributeName));
+			if (null != request.getHeader("userId")
+					&& null != request.getHeader("sessionId")
+					&& null != request.getHeader("email")
+					&& null != request.getHeader("userName")
+					&& null != request.getHeader("sessionType")) {
+				request.setAttribute("sessionType",
+						request.getHeader("sessionType"));
+
+				sessionId = request.getHeader("sessionId");
+
+				String customUserId = request.getHeader("userId");
+				existingCustomer = (ExtendCustomerImpl) customerService
+						.getByCustomUserId(customUserId);
+
+				if (null == existingCustomer) {
+					existingCustomer = new ExtendCustomerImpl();
+					existingCustomer.setId((new Date()).getTime());
 				}
-			}
 
-			if (sessionId == null || sessionId.length() < 1) {
-				// If it's not on the request attribute, try the parameter
-				sessionId = servletRequest.getParameter(sessionIdAttributeName);
-				if ((sessionId == null || sessionId.length() < 1)
-						&& customerId == null) {
-					// If it's not on the request attribute, try the parameter
-					customerId = servletRequest
-							.getParameter(customerIdAttributeName);
-				}
-			}
+				existingCustomer.setEmailAddress(request.getHeader("email"));
+				existingCustomer.setUsername(request.getHeader("userName"));
+				existingCustomer.setCustomUserId(request.getHeader("userId"));
 
-			if ((sessionId == null || sessionId.length() < 1)) {
-				// If it's not on the request parameter, look on the header
-				sessionId = request.getHeader(sessionIdAttributeName);
-				if (sessionId == null && customerId == null) {
-					// If it's not on the request parameter, look on the header
-					sessionId = request.getHeader(customerIdAttributeName);
-				}
-			}
-
-			if (sessionId != null && sessionId.trim().length() > 0) {
-
-				String obj = RestCallHandler.query(BYConstants.SITE_URL
-						+ "/api/v1/users/getUserInfoByIdForProducts?id="
-						+ sessionId);
-				System.out.println("making the query to get customer info -> "
-						+ BYConstants.SITE_URL
-						+ "/api/v1/users/getUserInfoByIdForProducts?id="
-						+ sessionId);
-				System.out.println(obj);
-				ExtendCustomer existingCustomer = null;
-				try {
-
-					JSONObject json1 = new JSONObject(obj);
-					JSONObject session = json1.getJSONObject("data");
-					JSONObject user = session.getJSONObject("user");
-					
-					request.setAttribute("sessionType", session.getInt("sessionType"));
-
-					String customUserId = user.getString("id");
-					existingCustomer = (ExtendCustomerImpl) customerService
-							.getByCustomUserId(customUserId);
-
-					if (null == existingCustomer) {
-						existingCustomer = new ExtendCustomerImpl();
-						existingCustomer.setId((new Date()).getTime());
-					}
-
-					existingCustomer.setEmailAddress(user.getString("email"));
-					existingCustomer.setUsername(user.getString("userName"));
-					existingCustomer.setCustomUserId(user.getString("id"));
-
-					customerService.saveCustomer(existingCustomer);
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
+				customerService.saveCustomer(existingCustomer);
 				if (existingCustomer != null) {
 					CustomerState.setCustomer(existingCustomer);
 				}
+			} else {
+
+				// First check to see if someone already put the customerId on
+				// the
+				// request
+				if (request.getAttribute(sessionIdAttributeName) != null) {
+					sessionId = String.valueOf(request
+							.getAttribute(sessionIdAttributeName));
+					if (request.getAttribute(customerIdAttributeName) != null) {
+						customerId = String.valueOf(request
+								.getAttribute(customerIdAttributeName));
+					}
+				}
+
+				if (sessionId == null || sessionId.length() < 1) {
+					// If it's not on the request attribute, try the parameter
+					sessionId = servletRequest
+							.getParameter(sessionIdAttributeName);
+					if ((sessionId == null || sessionId.length() < 1)
+							&& customerId == null) {
+						// If it's not on the request attribute, try the
+						// parameter
+						customerId = servletRequest
+								.getParameter(customerIdAttributeName);
+					}
+				}
+
+				if ((sessionId == null || sessionId.length() < 1)) {
+					// If it's not on the request parameter, look on the header
+					sessionId = request.getHeader(sessionIdAttributeName);
+					if (sessionId == null && customerId == null) {
+						// If it's not on the request parameter, look on the
+						// header
+						sessionId = request.getHeader(customerIdAttributeName);
+					}
+				}
+
+				if (sessionId != null && sessionId.trim().length() > 0) {
+
+					String obj = RestCallHandler.query(BYConstants.SITE_URL
+							+ "/api/v1/users/getUserInfoByIdForProducts?id="
+							+ sessionId);
+					System.out
+							.println("making the query to get customer info -> "
+									+ BYConstants.SITE_URL
+									+ "/api/v1/users/getUserInfoByIdForProducts?id="
+									+ sessionId);
+					System.out.println(obj);
+					try {
+
+						JSONObject json1 = new JSONObject(obj);
+						JSONObject session = json1.getJSONObject("data");
+						JSONObject user = session.getJSONObject("user");
+
+						request.setAttribute("sessionType",
+								session.getInt("sessionType"));
+
+						String customUserId = user.getString("id");
+						existingCustomer = (ExtendCustomerImpl) customerService
+								.getByCustomUserId(customUserId);
+
+						if (null == existingCustomer) {
+							existingCustomer = new ExtendCustomerImpl();
+							existingCustomer.setId((new Date()).getTime());
+						}
+
+						existingCustomer.setEmailAddress(user
+								.getString("email"));
+						existingCustomer
+								.setUsername(user.getString("userName"));
+						existingCustomer.setCustomUserId(user.getString("id"));
+
+						customerService.saveCustomer(existingCustomer);
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+					if (existingCustomer != null) {
+						CustomerState.setCustomer(existingCustomer);
+					}
+				}
 			}
 
-			if ((sessionId == null || sessionId.length() < 1)) {
-				if (customerId != null) {
+			if ((sessionId == null || sessionId.length() < 1) && customerId != null) {
 					Customer customer = customerService.readCustomerById(Long
 							.valueOf(customerId));
 					CustomerState.setCustomer(customer);
 				}
 
-				if (LOG.isDebugEnabled()) {
-					LOG.debug("No customer ID was found for the API request. In order to look up a customer for the request"
-							+ " send a request parameter or request header for the '"
-							+ sessionIdAttributeName + "' attribute");
-				}
-			}
+				
 		}
 
 		filterChain.doFilter(request, servletResponse);
