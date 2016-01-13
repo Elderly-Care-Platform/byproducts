@@ -55,13 +55,18 @@ public class CustomRestApiFilter extends GenericFilterBean implements Ordered {
 		if (request.getAttribute(CustomerStateRequestProcessor
 				.getCustomerRequestAttributeName()) == null) {
 
+			System.out.println(request.getHeader("userId") + " , "
+					+ request.getHeader("sessionId") + " , "
+					+ request.getHeader("email") + " , "
+					+ request.getHeader("userName") + " , "
+					+ request.getHeader("sessionType"));
 			if (null != request.getHeader("userId")
 					&& null != request.getHeader("sessionId")
 					&& null != request.getHeader("email")
 					&& null != request.getHeader("userName")
 					&& null != request.getHeader("sessionType")) {
 				request.setAttribute("sessionType",
-						request.getHeader("sessionType"));
+						Integer.parseInt(request.getHeader("sessionType")));
 
 				sessionId = request.getHeader("sessionId");
 
@@ -164,13 +169,13 @@ public class CustomRestApiFilter extends GenericFilterBean implements Ordered {
 				}
 			}
 
-			if ((sessionId == null || sessionId.length() < 1) && customerId != null) {
-					Customer customer = customerService.readCustomerById(Long
-							.valueOf(customerId));
-					CustomerState.setCustomer(customer);
-				}
+			if ((sessionId == null || sessionId.length() < 1)
+					&& customerId != null) {
+				Customer customer = customerService.readCustomerById(Long
+						.valueOf(customerId));
+				CustomerState.setCustomer(customer);
+			}
 
-				
 		}
 
 		filterChain.doFilter(request, servletResponse);
