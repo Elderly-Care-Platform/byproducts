@@ -1,4 +1,5 @@
 /*
+
  * Copyright 2008-2012 the original author or authors.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
@@ -21,17 +22,22 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
+import org.broadleafcommerce.common.email.service.EmailService;
+import org.broadleafcommerce.common.email.service.EmailServiceImpl;
+import org.broadleafcommerce.common.email.service.info.EmailInfo;
 import org.broadleafcommerce.core.checkout.service.exception.CheckoutException;
 import org.broadleafcommerce.core.checkout.service.workflow.CheckoutResponse;
 import org.broadleafcommerce.core.order.domain.FulfillmentGroup;
@@ -39,6 +45,8 @@ import org.broadleafcommerce.core.order.domain.Order;
 import org.broadleafcommerce.core.order.domain.OrderAttribute;
 import org.broadleafcommerce.core.order.domain.OrderAttributeImpl;
 import org.broadleafcommerce.core.order.domain.OrderItem;
+import org.broadleafcommerce.core.order.service.OrderService;
+import org.broadleafcommerce.core.order.service.OrderServiceImpl;
 import org.broadleafcommerce.core.pricing.service.exception.PricingException;
 import org.broadleafcommerce.core.web.api.BroadleafWebServicesException;
 import org.broadleafcommerce.core.web.api.wrapper.OrderPaymentWrapper;
@@ -46,12 +54,16 @@ import org.broadleafcommerce.core.web.api.wrapper.OrderWrapper;
 import org.broadleafcommerce.core.web.order.CartState;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.beautifulyears.BYConstants;
 import com.beautifulyears.api.wrapper.ExtendOrderPaymentWrapper;
 import com.beautifulyears.api.wrapper.ExtendOrderWrapper;
+import com.beautifulyears.domain.logistic.EmailOrderObject;
+import com.beautifulyears.sample.logistic.domain.PincodeImpl;
 import com.beautifulyears.sample.profile.domain.ExtendAddress;
 import com.beautifulyears.service.email.ExtendEmailService;
+import com.beautifulyears.service.email.ExtendEmailServiceImpl;
 import com.beautifulyears.service.logistic.checkOut.LogisticCheckOutService;
 
 /**
@@ -63,165 +75,201 @@ import com.beautifulyears.service.logistic.checkOut.LogisticCheckOutService;
 @Component
 @Scope("singleton")
 @Path("/cart/checkout/")
-@Produces(value = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-@Consumes(value = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+@Produces(value = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+@Consumes(value = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 public class CheckoutEndpoint extends
-    org.broadleafcommerce.core.web.api.endpoint.checkout.CheckoutEndpoint {
+		org.broadleafcommerce.core.web.api.endpoint.checkout.CheckoutEndpoint {
 
-  final static Logger logger = Logger.getLogger(CheckoutEndpoint.class);
-  
-  @Resource(name = "blLogisticCheckoutService")
+	final static Logger logger = Logger.getLogger(CheckoutEndpoint.class);
+
+	@Resource(name = "extendEmailService")
+	protected ExtendEmailService emailService;
+
+	@Resource(name = "blLogisticCheckoutService")
 	protected LogisticCheckOutService logisticCheckoutService;
 
-  /*
-   * This method is used to get payment details for order
-   * 
-   * (non-Javadoc)
-   * 
-   * @see org.broadleafcommerce.core.web.api.endpoint.checkout.CheckoutEndpoint
-   * #findPaymentsForOrder( javax.servlet.http.HttpServletRequest)
-   */
-  @Override
-  @GET
-  @Path("payments")
-  public List<OrderPaymentWrapper> findPaymentsForOrder(@Context HttpServletRequest request) {
-    logger.debug("Executing method : findPaymentsForOrder()");
-    return super.findPaymentsForOrder(request);
-  }
+	@Resource(name = "blOrderService")
+	protected OrderService orderService;
 
-  /*
-   * This method is used to add payment details to the order
-   * 
-   * (non-Javadoc)
-   * 
-   * @see org.broadleafcommerce.core.web.api.endpoint.checkout.CheckoutEndpoint
-   * #addPaymentToOrder(javax .servlet.http.HttpServletRequest,
-   * org.broadleafcommerce.core.web.api.wrapper.OrderPaymentWrapper)
-   */
-  @POST
-  @Path("payment")
-  public OrderPaymentWrapper addPaymentToOrder(@Context HttpServletRequest request,
-      ExtendOrderPaymentWrapper wrapper) {
-    logger.debug("Executing method : addPaymentToOrder()");
-    return super.addPaymentToOrder(request, wrapper);
-  }
+	/*
+	 * This method is used to get payment details for order
+	 * 
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.broadleafcommerce.core.web.api.endpoint.checkout.CheckoutEndpoint
+	 * #findPaymentsForOrder( javax.servlet.http.HttpServletRequest)
+	 */
+	@Override
+	@GET
+	@Path("payments")
+	public List<OrderPaymentWrapper> findPaymentsForOrder(
+			@Context HttpServletRequest request) {
+		logger.debug("Executing method : findPaymentsForOrder()");
+		return super.findPaymentsForOrder(request);
+	}
 
-  /*
-   * This method is used to remove payment details from the order
-   * 
-   * (non-Javadoc)
-   * 
-   * @see org.broadleafcommerce.core.web.api.endpoint.checkout.CheckoutEndpoint
-   * #removePaymentFromOrder (javax.servlet.http.HttpServletRequest,
-   * org.broadleafcommerce.core.web.api.wrapper.OrderPaymentWrapper)
-   */
-  @Override
-  @DELETE
-  @Path("payment")
-  public OrderWrapper removePaymentFromOrder(@Context HttpServletRequest request,
-      OrderPaymentWrapper wrapper) {
-    logger.debug("Executing method : removePaymentFromOrder()");
-    return super.removePaymentFromOrder(request, wrapper);
-  }
+	@GET
+	@Path("getOrderSummary/{orderId}")
+	public String getOrderSummary(@Context HttpServletRequest request,
+			@Context HttpServletResponse response,
+			@PathParam("orderId") Long orderId) {
+		System.out.println("called");
+		Order order = orderService.findOrderById(orderId);
+		String summary = ((ExtendEmailServiceImpl) emailService)
+				.getOrderSummary(order, null);
+		return summary;
+	}
 
-  /**
-   * It is used to perform checkout operation, Extend endpoint to save shipping address
-   * 
-   * @param request
-   * @param orderWrapper
-   * @return
- * @throws PricingException 
-   * 
-   */
+	/*
+	 * This method is used to add payment details to the order
+	 * 
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.broadleafcommerce.core.web.api.endpoint.checkout.CheckoutEndpoint
+	 * #addPaymentToOrder(javax .servlet.http.HttpServletRequest,
+	 * org.broadleafcommerce.core.web.api.wrapper.OrderPaymentWrapper)
+	 */
+	@POST
+	@Path("payment")
+	public OrderPaymentWrapper addPaymentToOrder(
+			@Context HttpServletRequest request,
+			ExtendOrderPaymentWrapper wrapper) {
+		logger.debug("Executing method : addPaymentToOrder()");
+		return super.addPaymentToOrder(request, wrapper);
+	}
 
-  @POST
-  public OrderWrapper performCheckout(@Context HttpServletRequest request,
-      ExtendOrderWrapper orderWrapper) throws PricingException {
-	  System.out.println("sessionType = "+request.getAttribute("sessionType"));
-	  int sessionType = (Integer)request.getAttribute("sessionType");
-	  
-	  if(sessionType != 0){
-		  if(sessionType == 1){
-			  throw BroadleafWebServicesException.build(500).addMessage("3010");
-		  }else{
-			  throw BroadleafWebServicesException.build(500).addMessage("3011");
-		  }
-	  }
-    System.out.println("---------------------------------CHECKOUT REQUEST START----------------------");
-    // Get the cart
-    Order cart = CartState.getCart();
-    if (cart != null) {
-      try {
-        ExtendAddress address = null;
-        // Get the unwrapped order from the wrapper
-        Order order = orderWrapper.unwrap(request, context);
-        // Set fulfillment group in cart
-        cart.setFulfillmentGroups(order.getFulfillmentGroups());
-        // Get the address selected by Customer
-        for (FulfillmentGroup fulfillment : order.getFulfillmentGroups()) {
-          address = (ExtendAddress) fulfillment.getAddress();
-        }
-        
-        
-        Map<String, OrderAttribute>  attributeMap;
-        if(null != order.getOrderAttributes()){
-        	attributeMap = order.getOrderAttributes();
-        }else{
-        	attributeMap = new HashMap<String, OrderAttribute>();
-        }
-       Map<String, String> addressMap = address.getAddressMap();
-        for (String key : addressMap.keySet()) {
-        	OrderAttribute addressAttribute = new OrderAttributeImpl();
-	        addressAttribute.setName(key);
-	        addressAttribute.setValue(addressMap.get(key));
-	        addressAttribute.setOrder(order);
-	        attributeMap.put(key, addressAttribute);
-        }
-        order.setOrderAttributes(attributeMap);
-        
-        
-        
-          CheckoutResponse response = checkoutService.performCheckout(cart);
-          System.out.println("System checkout done completely..trying out logistic checkout");
-//          CheckoutResponse response1 = logisticCheckoutService.checkOut(cart);
-          // Get order and wrap it
-          order = response.getOrder();
-          ExtendOrderWrapper wrapper =
-              (ExtendOrderWrapper) context.getBean(ExtendOrderWrapper.class.getName());
-          wrapper.wrapDetails(order, request);
+	/*
+	 * This method is used to remove payment details from the order
+	 * 
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.broadleafcommerce.core.web.api.endpoint.checkout.CheckoutEndpoint
+	 * #removePaymentFromOrder (javax.servlet.http.HttpServletRequest,
+	 * org.broadleafcommerce.core.web.api.wrapper.OrderPaymentWrapper)
+	 */
+	@Override
+	@DELETE
+	@Path("payment")
+	public OrderWrapper removePaymentFromOrder(
+			@Context HttpServletRequest request, OrderPaymentWrapper wrapper) {
+		logger.debug("Executing method : removePaymentFromOrder()");
+		return super.removePaymentFromOrder(request, wrapper);
+	}
 
-//          // Send confirmation mail
-//          ExtendEmailService emailService =
-//              (ExtendEmailService) context.getBean("extendEmailService");
-//          try {
-//        	  if(null != address.getPrimaryEmail()){
-//        		  emailService.sendOrderConfirmation(order, null, address.getPrimaryEmail());
-//        	  }
-//        	  for(String adminEmail : BYConstants.ADMIN_EMAILS){
-//        		  emailService.sendOrderConfirmationAdmin(order, null,
-//        				  adminEmail);
-//        	  }
-//        	  
-//        	  for(OrderItem item : order.getOrderItems()){
-//        		  for(String adminEmail : BYConstants.ADMIN_EMAILS){
-//            		  emailService.sendOrderItemConfirmation(order, item, adminEmail);
-//            	  }
-//        	  }
-//            
-//          } catch (IOException e) {
-//            e.printStackTrace();
-//          }
-          System.out.println("---------------------------------CHECKOUT REQUEST END----------------------");
-          return wrapper;
-      } catch (CheckoutException e) {
-    	  System.out.println("---------------------------------CHECKOUT REQUEST ERROR----------------------");
-        throw BroadleafWebServicesException.build(
-            Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).addMessage(
-            BroadleafWebServicesException.CHECKOUT_PROCESSING_ERROR);
-      }
-    }
+	/**
+	 * It is used to perform checkout operation, Extend endpoint to save
+	 * shipping address
+	 * 
+	 * @param request
+	 * @param orderWrapper
+	 * @return
+	 * @throws PricingException
+	 * 
+	 */
 
-    throw BroadleafWebServicesException.build(Response.Status.NOT_FOUND.getStatusCode())
-        .addMessage(BroadleafWebServicesException.CART_NOT_FOUND);
-  }
+	@POST
+	public OrderWrapper performCheckout(@Context HttpServletRequest request,
+			ExtendOrderWrapper orderWrapper) throws PricingException {
+		System.out.println("sessionType = "
+				+ request.getAttribute("sessionType"));
+		int sessionType = (Integer) request.getAttribute("sessionType");
+
+		if (sessionType != 0) {
+			if (sessionType == 1) {
+				throw BroadleafWebServicesException.build(500).addMessage(
+						"3010");
+			} else {
+				throw BroadleafWebServicesException.build(500).addMessage(
+						"3011");
+			}
+		}
+		System.out
+				.println("---------------------------------CHECKOUT REQUEST START----------------------");
+		// Get the cart
+		Order cart = CartState.getCart();
+		if (cart != null) {
+			try {
+				ExtendAddress address = null;
+				// Get the unwrapped order from the wrapper
+				Order order = orderWrapper.unwrap(request, context);
+				// Set fulfillment group in cart
+				cart.setFulfillmentGroups(order.getFulfillmentGroups());
+				// Get the address selected by Customer
+				for (FulfillmentGroup fulfillment : order
+						.getFulfillmentGroups()) {
+					address = (ExtendAddress) fulfillment.getAddress();
+				}
+
+				Map<String, OrderAttribute> attributeMap;
+				if (null != order.getOrderAttributes()) {
+					attributeMap = order.getOrderAttributes();
+				} else {
+					attributeMap = new HashMap<String, OrderAttribute>();
+				}
+				Map<String, String> addressMap = address.getAddressMap();
+				for (String key : addressMap.keySet()) {
+					OrderAttribute addressAttribute = new OrderAttributeImpl();
+					addressAttribute.setName(key);
+					addressAttribute.setValue(addressMap.get(key));
+					addressAttribute.setOrder(order);
+					attributeMap.put(key, addressAttribute);
+				}
+				order.setOrderAttributes(attributeMap);
+
+				CheckoutResponse response = checkoutService
+						.performCheckout(cart);
+				System.out
+						.println("System checkout done completely..trying out logistic checkout");
+				// CheckoutResponse response1 =
+				// logisticCheckoutService.checkOut(cart);
+				// Get order and wrap it
+				order = response.getOrder();
+				ExtendOrderWrapper wrapper = (ExtendOrderWrapper) context
+						.getBean(ExtendOrderWrapper.class.getName());
+				wrapper.wrapDetails(order, request);
+
+				// // Send confirmation mail
+				// ExtendEmailService emailService =
+				// (ExtendEmailService) context.getBean("extendEmailService");
+				// try {
+				// if(null != address.getPrimaryEmail()){
+				// emailService.sendOrderConfirmation(order, null,
+				// address.getPrimaryEmail());
+				// }
+				// for(String adminEmail : BYConstants.ADMIN_EMAILS){
+				// emailService.sendOrderConfirmationAdmin(order, null,
+				// adminEmail);
+				// }
+				//
+				// for(OrderItem item : order.getOrderItems()){
+				// for(String adminEmail : BYConstants.ADMIN_EMAILS){
+				// emailService.sendOrderItemConfirmation(order, item,
+				// adminEmail);
+				// }
+				// }
+				//
+				// } catch (IOException e) {
+				// e.printStackTrace();
+				// }
+				System.out
+						.println("---------------------------------CHECKOUT REQUEST END----------------------");
+				return wrapper;
+			} catch (CheckoutException e) {
+				System.out
+						.println("---------------------------------CHECKOUT REQUEST ERROR----------------------");
+				throw BroadleafWebServicesException
+						.build(Response.Status.INTERNAL_SERVER_ERROR
+								.getStatusCode())
+						.addMessage(
+								BroadleafWebServicesException.CHECKOUT_PROCESSING_ERROR);
+			}
+		}
+
+		throw BroadleafWebServicesException.build(
+				Response.Status.NOT_FOUND.getStatusCode()).addMessage(
+				BroadleafWebServicesException.CART_NOT_FOUND);
+	}
 }
