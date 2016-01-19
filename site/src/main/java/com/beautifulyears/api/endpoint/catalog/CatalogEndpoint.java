@@ -345,7 +345,10 @@ public class CatalogEndpoint extends
 		try {
 			if (("*").equals(q)) {
 				activeProducts = category.getActiveProducts();
-			} else {
+			}
+
+			if (!("*").equals(q) || activeProducts.size() <= 0) {
+				activeProducts = new ArrayList<Product>();
 				List<SearchFacetDTO> availableFacets = getSearchService()
 						.getSearchFacets();
 				ProductSearchCriteria searchCriteria = facetService
