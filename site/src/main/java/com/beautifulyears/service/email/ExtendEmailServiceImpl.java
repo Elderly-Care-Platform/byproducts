@@ -12,7 +12,6 @@ import org.broadleafcommerce.common.email.service.info.EmailInfo;
 import org.broadleafcommerce.common.email.service.message.Attachment;
 import org.broadleafcommerce.common.payment.PaymentType;
 import org.broadleafcommerce.core.order.domain.DiscreteOrderItem;
-import org.broadleafcommerce.core.order.domain.DiscreteOrderItemImpl;
 import org.broadleafcommerce.core.order.domain.Order;
 import org.broadleafcommerce.core.order.domain.OrderItem;
 import org.springframework.beans.BeansException;
@@ -52,13 +51,17 @@ public class ExtendEmailServiceImpl implements ApplicationContextAware, ExtendEm
   @Override
   public void sendOrderConfirmation(Order order, OrderTrackingInfo orderTrackingInfo,
       String emailAddress) throws IOException {
+    StringBuffer file = new StringBuffer();
+    EmailInfo emailInfo = getOrderConfirmationEmailInfo();
+    
     HashMap<String, Object> props = new HashMap<String, Object>();
     EmailOrderObject emailObj = getEmailObject(order,null);
     props.put("order", emailObj);
-    
-    EmailInfo emailInfo = getOrderConfirmationEmailInfo();
-    StringBuffer file = new StringBuffer();
+    if(null == emailInfo){
+    	emailInfo = getOrderConfirmationEmailInfo();
+    }
     String msgBody = ((EmailServiceImpl)emailService).getMessageCreator().buildMessageBody(emailInfo, props);
+    
     System.out.println(msgBody);
     file.append(msgBody);
 
@@ -70,6 +73,17 @@ public class ExtendEmailServiceImpl implements ApplicationContextAware, ExtendEm
     emailInfo.getAttachments().clear();
     emailInfo.getAttachments().add(attachment);
     emailService.sendTemplateEmail(emailAddress, emailInfo, props);
+  }
+  
+  public String getOrderSummary(Order order,EmailInfo emailInfo){
+	  HashMap<String, Object> props = new HashMap<String, Object>();
+	    EmailOrderObject emailObj = getEmailObject(order,null);
+	    props.put("order", emailObj);
+	    if(null == emailInfo){
+	    	emailInfo = getOrderConfirmationEmailInfo();
+	    }
+	    String msgBody = ((EmailServiceImpl)emailService).getMessageCreator().buildMessageBody(emailInfo, props);
+	    return msgBody;
   }
 
   /*
@@ -222,7 +236,7 @@ public void sendOrderCancellationAdmin(Order order, String emailAddress)
 }
 
 
-private EmailOrderObject getEmailObject(Order order, OrderItem orderItem){
+public static EmailOrderObject getEmailObject(Order order, OrderItem orderItem){
 EmailOrderObject emailObj = new EmailOrderObject();
     
     StringBuffer name = new StringBuffer("");
@@ -279,7 +293,7 @@ EmailOrderObject emailObj = new EmailOrderObject();
     	
     	emailObj.getOrderItems().add(itemObj);
     }
-	if (null != order.getPayments() && null != order.getPayments().get(0)
+	if (null != order.getPayments() && order.getPayments().size() > 0 &&  null != order.getPayments().get(0)
 			&& null != order.getPayments().get(0).getType()
 			&& order.getPayments().get(0).getType() == PaymentType.COD) {
 		emailObj.setOrderPaymentType("COD");
