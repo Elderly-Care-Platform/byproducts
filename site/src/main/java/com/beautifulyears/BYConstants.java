@@ -1,3 +1,4 @@
+
 /**
  * 
  */
@@ -34,6 +35,11 @@ public class BYConstants {
 	public static final String LOGISTIC_API = "http://ecomm.prtouch.com";
 	public static final String LOGISTIC_USERNAME = "ecomexpress";
 	public static final String LOGISTIC_PASSWORD = "Ke%243c%404oT5m6h%23%24";
+	
+	
+	
+	public static final Integer DELIVERY_MODE_DELIVER = 0;
+	public static final Integer DELIVERY_MODE_PICKUP = 1;
 	
 	
 

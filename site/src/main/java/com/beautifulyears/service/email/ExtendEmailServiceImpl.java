@@ -12,13 +12,16 @@ import org.broadleafcommerce.common.email.service.info.EmailInfo;
 import org.broadleafcommerce.common.email.service.message.Attachment;
 import org.broadleafcommerce.common.payment.PaymentType;
 import org.broadleafcommerce.core.order.domain.DiscreteOrderItem;
+import org.broadleafcommerce.core.order.domain.FulfillmentGroup;
 import org.broadleafcommerce.core.order.domain.Order;
 import org.broadleafcommerce.core.order.domain.OrderItem;
+import org.broadleafcommerce.core.order.service.type.FulfillmentType;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Service;
 
+import com.beautifulyears.BYConstants;
 import com.beautifulyears.domain.logistic.EmailOrderObject;
 import com.beautifulyears.sample.catalog.domain.ExtendProductImpl;
 import com.beautifulyears.sample.fedExOrder.domain.OrderTrackingInfo;
@@ -246,6 +249,14 @@ EmailOrderObject emailObj = new EmailOrderObject();
 //    props.put("name", name.toString());
     emailObj.setCustomerName(name.toString());
     emailObj.setSubmitDate(order.getSubmitDate());
+    
+    for (FulfillmentGroup FulfillmentGroup : order.getFulfillmentGroups()) {
+		if (null != FulfillmentGroup.getType()
+				&& FulfillmentGroup.getType().equals(
+						FulfillmentType.PHYSICAL_PICKUP)) {
+			emailObj.setDeliveryType(BYConstants.DELIVERY_MODE_PICKUP);
+		}
+	}
     
     
     StringBuffer address1 = new StringBuffer("");
