@@ -42,7 +42,7 @@
         <tr height="10"></tr>
         <tr>
             <td>
-                <strong>Item Deatils </strong> 
+                <strong>Item Details </strong> 
             </td>
         </tr>
         <tr height="5"></tr>
@@ -105,16 +105,19 @@
         </tr>
         <tr height="20" ></tr>
          <tr th:if="${order.deliveryType==0}">
-            <td>
+            <td th:if="${order.deliveryType==0}">
                 <strong>The Shipment will be sent to:</strong> 
             </td>
+            <td th:unless="${order.deliveryType==0}">
+                <strong>Customer Details:</strong> 
+            </td>
         </tr>
-        <tr height="5" th:if="${order.deliveryType==0}"></tr>
-        <tr height="1" th:if="${order.deliveryType==0}">
+        <tr height="5""></tr>
+        <tr height="1"">
             <td width="100%" bgcolor="#dddddd"></td>
         </tr>
-        <tr height="5" th:if="${order.deliveryType==0}"></tr>
-        <tr th:if="${order.deliveryType==0}">
+        <tr height="5""></tr>
+        <tr>
             <td>
                 <span th:text="${order.customerName}"></span><br/>
 
@@ -125,7 +128,7 @@
                 India
             </td>
         </tr>
-        <tr height="20" th:if="${order.deliveryType==0}"></tr>
+        <tr height="20"></tr>
         <tr>
             <td>
                 <strong>Sold by</strong> 
