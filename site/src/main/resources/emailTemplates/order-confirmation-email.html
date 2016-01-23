@@ -112,18 +112,18 @@
                 <strong>Customer Details:</strong> 
             </td>
         </tr>
-        <tr height="5""></tr>
-        <tr height="1"">
+        <tr height="5"></tr>
+        <tr height="1">
             <td width="100%" bgcolor="#dddddd"></td>
         </tr>
-        <tr height="5""></tr>
+        <tr height="5"></tr>
         <tr>
             <td>
                 <span th:text="${order.customerName}"></span><br/>
 
-                <span th:text="${order.shippingAddr1}"></span><br/>
+                <span th:text="${order.shippingAddr1}" th:if="${order.deliveryType==0}"></span><br/>
 
-                <span th:text="${order.shippingAddr2}"></span><br/>
+                <span th:text="${order.shippingAddr2}" th:if="${order.deliveryType==0}"></span><br/>
 
                 India
             </td>
