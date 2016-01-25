@@ -8,11 +8,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.beautifulyears.BYConstants;
+
 /**
  * @author Nitin
  *
  */
 public class EmailOrderObject {
+
+	private Integer deliveryType = BYConstants.DELIVERY_MODE_DELIVER;
 	private String orderNumber;
 	private Date submitDate;
 	private String customerName;
@@ -24,6 +28,14 @@ public class EmailOrderObject {
 	private BigDecimal totalDeliveryCharges;
 	private String orderPaymentType = "PPD";
 	private List<OrderItem> orderItems = new ArrayList<EmailOrderObject.OrderItem>();
+
+	public Integer getDeliveryType() {
+		return deliveryType;
+	}
+
+	public void setDeliveryType(Integer deliveryType) {
+		this.deliveryType = deliveryType;
+	}
 
 	public String getOrderPaymentType() {
 		return orderPaymentType;

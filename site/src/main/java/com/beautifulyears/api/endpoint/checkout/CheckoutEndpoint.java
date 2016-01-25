@@ -111,6 +111,7 @@ public class CheckoutEndpoint extends
 
 	@GET
 	@Path("getOrderSummary/{orderId}")
+	@Produces(value = { MediaType.TEXT_HTML})
 	public String getOrderSummary(@Context HttpServletRequest request,
 			@Context HttpServletResponse response,
 			@PathParam("orderId") Long orderId) {

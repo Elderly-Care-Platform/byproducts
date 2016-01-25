@@ -25,6 +25,7 @@ import org.broadleafcommerce.core.order.domain.OrderAttribute;
 import org.broadleafcommerce.core.order.domain.OrderItem;
 import org.broadleafcommerce.core.order.service.OrderService;
 import org.broadleafcommerce.core.order.service.call.ActivityMessageDTO;
+import org.broadleafcommerce.core.order.service.type.FulfillmentType;
 import org.broadleafcommerce.core.payment.domain.OrderPayment;
 import org.broadleafcommerce.core.web.api.wrapper.APIUnwrapper;
 import org.broadleafcommerce.core.web.api.wrapper.AdjustmentWrapper;
@@ -37,6 +38,7 @@ import org.broadleafcommerce.core.web.api.wrapper.OrderWrapper;
 import org.broadleafcommerce.profile.core.domain.Address;
 import org.springframework.context.ApplicationContext;
 
+import com.beautifulyears.BYConstants;
 import com.beautifulyears.sample.catalog.domain.ExtendProductImpl;
 import com.beautifulyears.sample.profile.domain.ExtendAddress;
 
@@ -75,6 +77,9 @@ public class ExtendOrderWrapper extends OrderWrapper implements APIUnwrapper<Ord
 
   @XmlElement(name = "feedback")
   protected String feedback;
+  
+  @XmlElement(name = "deliveryMode")
+  protected Integer deliveryMode;
 
 	@XmlElement(name = "orderItem")
 	@XmlElementWrapper(name = "orderItems")
@@ -216,7 +221,13 @@ public class ExtendOrderWrapper extends OrderWrapper implements APIUnwrapper<Ord
       // Add shipping address in fulfillment group
       for (FulfillmentGroup FulfillmentGroup : order.getFulfillmentGroups()) {
         FulfillmentGroup.setAddress(address);
+        if(deliveryMode == BYConstants.DELIVERY_MODE_PICKUP){
+        	FulfillmentGroup.setType(FulfillmentType.PHYSICAL_PICKUP);
+        }else{
+        	FulfillmentGroup.setType(FulfillmentType.PHYSICAL_SHIP);
+        }
         fulfillmentGroupList.add(FulfillmentGroup);
+        
       }
 			
       // Set shippping address in order
