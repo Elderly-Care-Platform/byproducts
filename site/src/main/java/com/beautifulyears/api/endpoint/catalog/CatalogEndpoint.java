@@ -189,7 +189,7 @@ public class CatalogEndpoint extends
 	 */
 	@GET
 	@Path("products")
-	public List<ProductWrapper> getAllActiveProducts(
+	public SearchResultsWrapper getAllActiveProducts(
 			@Context HttpServletRequest request,
 			@QueryParam("productLimit") @DefaultValue("20") int productLimit,
 			@QueryParam("productOffset") @DefaultValue("1") int productOffset,
@@ -197,6 +197,7 @@ public class CatalogEndpoint extends
 			@QueryParam("page") @DefaultValue("1") Integer page) {
 		logger.debug("Executing method : getAllActiveProducts()");
 
+		ProductSearchResult result = new ProductSearchResult();
 		List<Category> categoryList = catalogService.findAllCategories();
 		List<Category> categoryActiveList = getAllActiveCategories(categoryList);
 		List<ProductWrapper> out = new ArrayList<ProductWrapper>();
@@ -209,7 +210,9 @@ public class CatalogEndpoint extends
 			}
 		}
 
+		result.setTotalResults(productsSet.size());
 		List<Product> productsList = new ArrayList<Product>(productsSet);
+		
 		productsList = getProductPagination(productsList, page, pageSize);
 
 		for (Product product : productsList) {
@@ -218,7 +221,16 @@ public class CatalogEndpoint extends
 			wrapper.wrapSummary(product, request);
 			out.add(wrapper);
 		}
-		return out;
+
+		// set products
+		result.setProducts(productsList);
+		result.setPageSize(pageSize);
+		result.setPage(page);
+		
+		SearchResultsWrapper wrapper = (SearchResultsWrapper) context
+				.getBean(SearchResultsWrapper.class.getName());
+		wrapper.wrapDetails(result, request);
+		return wrapper;
 	}
 
 	/**
