@@ -9,10 +9,12 @@
             <td>
                 <table width="600" border="0" cellspacing="0" cellpadding="0" align="center">
                 <tr>
-                    <td align="left">
-                        Hi User,<br/>
+                    <td align="left" th:if="${order.email}">
+                        Hi <span th:text="${order.customerName}"></span>,<br/>
                         Greetings from <a href="http://beautifulyears.com/" style="color:#000000; text-decoration:none;" target="_blank">Beautifulyears.com</a><br/>
                         Your order has been placed with below mentioned item details !
+                    </td>
+                    <td align="left" th:unless="${order.email}">
                     </td>
                     <td align="left">
                         <a href="http://beautifulyears.com/">
@@ -48,13 +50,13 @@
         <tr height="5"></tr>
         <tr>
             <td>
-                <table width="600" border="1"  cellspacing="0" cellpadding="5" align="center"  style="border-collapse: collapse;">
+                <table width="600" border="1"  cellspacing="0" cellpadding="5" align="center"  style="border-collapse: collapse;font-size: 12px;">
                     <tr bgcolor="#000000" style="color:#ffffff; font-sizr:16px; font-weight:bold;">
                         <td align="center"  width="160">Product Details</td>
                         <td align="center" width="140" th:if="${order.deliveryType==0}">AWB Number</td>
                         <td align="center" width="50">Qty.</td>
                         <td align="center" width="80">Price<br/> Per Unit</td>
-                        <td align="center" width="90">Discount</td>
+                        <!-- td align="center" width="90">Discount</td -->
                         <td align="center" width="50">Tax</td>
                         <td align="center" width="80">Total<br/>Price</td>
                     </tr>
@@ -64,7 +66,7 @@
                         <td align="center"  th:if="${order.deliveryType==0}"><span th:text="${orderItem.awbNumber}"></span></td>
                         <td align="center"><span th:text="${orderItem.quantity}"></span></td>
                         <td align="center"><span th:text="${orderItem.price}"></span></td>
-                        <td align="center">0%</td>
+                        <!-- td align="center">0%</td -->
                         <td align="center"><span th:text="${orderItem.taxAmount}"></span></td>
                         <td align="center"><span th:text="${orderItem.price}"></span></td>
                     </tr>
@@ -74,7 +76,7 @@
         </tr>
         <tr>
             <td>
-                 <table width="600" border="1"  cellspacing="0" cellpadding="5" align="center"  style="border-collapse: collapse;">
+                 <table width="600" border="1"  cellspacing="0" cellpadding="5" align="center"  style="border-collapse: collapse;font-size: 12px;">
                     <tr bgcolor="#ffffff" style="color:#000000;  border-top:0px; border-bottom:0px;">                        
                         <td align="right" width="534">Sub Total</td>
                         <td align="center" width="66"><span th:text="${order.subTotal}"></span></td>
@@ -104,7 +106,7 @@
             </td>
         </tr>
         <tr height="20" ></tr>
-         <tr th:if="${order.deliveryType==0}">
+         <tr>
             <td th:if="${order.deliveryType==0}">
                 <strong>The Shipment will be sent to:</strong> 
             </td>
@@ -121,9 +123,9 @@
             <td>
                 <span th:text="${order.customerName}"></span><br/>
 
-                <span th:text="${order.shippingAddr1}" th:if="${order.deliveryType==0}"></span><br/>
+                <span th:text="${order.shippingAddr1}" th:if="${order.deliveryType==0}"></span><br th:if="${order.deliveryType==0}"/>
 
-                <span th:text="${order.shippingAddr2}" th:if="${order.deliveryType==0}"></span><br/>
+                <span th:text="${order.shippingAddr2}" th:if="${order.deliveryType==0}"></span><br th:if="${order.deliveryType==0}"/>
 
                 India
             </td>
@@ -141,7 +143,7 @@
         <tr height="5"></tr>
         <tr>
             <td>
-                Sold By: <a href="http://beautifulyears.com/" style="color:#000000; text-decoration:none;" target="_blank">BeautifulYears Technologies &amp; Services Pvt. Ltd.</a><br/>
+                <a href="http://beautifulyears.com/" style="color:#000000; text-decoration:none;" target="_blank">BeautifulYears Technologies &amp; Services Pvt. Ltd.</a><br/>
                 Address: No.48, 2nd main, Koramangala 1st block, Bengaluru - 560034<br/>
                 TIN/CST NO : 29431300594
             </td>
@@ -155,7 +157,7 @@
          <tr height="20"></tr>
         <tr>
             <td>
-                <table width="100%" style="border:1px solid #dddddd;" cellspacing="0" cellpadding="0" align="center">
+                <table width="100%" style="border:1px solid #dddddd;font-size: 13px;" cellspacing="0" cellpadding="0" align="center" >
                     <tr height="15"></tr>
                     <tr>
                         <td align="left" width="3%"></td>
@@ -175,7 +177,7 @@
                 <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center" style="font-size:10px; line-height:15px;">
                     <tr>
                         <td align="left" width="48%" valign="top">
-                             <table width="100%" border="0" cellspacing="0" cellpadding="0" align="left">
+                             <table width="100%" border="0" cellspacing="0" cellpadding="0" align="left" style="font-size: 10px;">
                                 <tr>
                                     <td>
                                         Disclaimer:
@@ -192,10 +194,10 @@
                         </td>
                         <td align="left" width="4%"></td>
                         <td align="left" width="48%" valign="top">
-                            <table width="100%" border="0" cellspacing="0" cellpadding="0" align="left">
+                            <table width="100%" border="0" cellspacing="0" cellpadding="0" align="left" style="font-size: 12px;">
                                 <tr>
                                     <td>
-                                        Registered Address
+                                       <b> Registered Address </b>
                                     </td>
                                 </tr>
                                 <tr height="1"></tr>

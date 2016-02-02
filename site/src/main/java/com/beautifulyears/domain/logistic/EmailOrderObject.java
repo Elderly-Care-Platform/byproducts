@@ -28,6 +28,15 @@ public class EmailOrderObject {
 	private BigDecimal totalDeliveryCharges;
 	private String orderPaymentType = "PPD";
 	private List<OrderItem> orderItems = new ArrayList<EmailOrderObject.OrderItem>();
+	private boolean isEmail = true;
+
+	public boolean isEmail() {
+		return isEmail;
+	}
+
+	public void setEmail(boolean isEmail) {
+		this.isEmail = isEmail;
+	}
 
 	public Integer getDeliveryType() {
 		return deliveryType;

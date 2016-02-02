@@ -62,7 +62,7 @@ public class ExtendEmailServiceImpl implements ApplicationContextAware,
 		EmailInfo emailInfo = getOrderConfirmationEmailInfo();
 
 		HashMap<String, Object> props = new HashMap<String, Object>();
-		EmailOrderObject emailObj = getEmailObject(order, null);
+		EmailOrderObject emailObj = getEmailObject(order, null, true);
 		props.put("order", emailObj);
 		if (null == emailInfo) {
 			emailInfo = getOrderConfirmationEmailInfo();
@@ -85,7 +85,7 @@ public class ExtendEmailServiceImpl implements ApplicationContextAware,
 
 	public String getOrderSummary(Order order, EmailInfo emailInfo) {
 		HashMap<String, Object> props = new HashMap<String, Object>();
-		EmailOrderObject emailObj = getEmailObject(order, null);
+		EmailOrderObject emailObj = getEmailObject(order, null, false);
 		props.put("order", emailObj);
 		if (null == emailInfo) {
 			emailInfo = getOrderConfirmationEmailInfo();
@@ -213,7 +213,7 @@ public class ExtendEmailServiceImpl implements ApplicationContextAware,
 			String emailAddress) throws IOException {
 		{
 			HashMap<String, Object> props = new HashMap<String, Object>();
-			EmailOrderObject emailObj = getEmailObject(order, item);
+			EmailOrderObject emailObj = getEmailObject(order, item, true);
 
 			props.put("order", emailObj);
 			props.put("orderItem", emailObj.getOrderItems().get(0));
@@ -257,12 +257,15 @@ public class ExtendEmailServiceImpl implements ApplicationContextAware,
 	}
 
 	public static EmailOrderObject getEmailObject(Order order,
-			OrderItem orderItem) {
+			OrderItem orderItem, boolean isEmail) {
 		EmailOrderObject emailObj = new EmailOrderObject();
-
+		emailObj.setEmail(isEmail);
 		StringBuffer name = new StringBuffer("");
 		name.append(order.getOrderAttributes().get("firstName"));
-		if (null != order.getOrderAttributes().get("lastName")) {
+		if (null != order.getOrderAttributes()
+				&& null != order.getOrderAttributes().get("lastName")
+				&& null != order.getOrderAttributes().get("lastName")
+						.getValue()) {
 			name.append(" ");
 			name.append(order.getOrderAttributes().get("lastName"));
 		}
