@@ -369,12 +369,12 @@ public class CatalogEndpoint extends
 				}
 			}
 			// Pagination
+			result.setTotalResults(activeProducts.size());
 			activeProducts = getProductPagination(activeProducts, page,
 					pageSize);
 
 			// set products
 			result.setProducts(activeProducts);
-			result.setTotalResults(activeProducts.size());
 			result.setPageSize(pageSize);
 			result.setPage(page);
 
