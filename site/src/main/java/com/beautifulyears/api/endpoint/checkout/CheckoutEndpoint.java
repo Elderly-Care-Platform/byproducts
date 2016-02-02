@@ -15,7 +15,6 @@
 
 package com.beautifulyears.api.endpoint.checkout;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,18 +34,13 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
-import org.broadleafcommerce.common.email.service.EmailService;
-import org.broadleafcommerce.common.email.service.EmailServiceImpl;
-import org.broadleafcommerce.common.email.service.info.EmailInfo;
 import org.broadleafcommerce.core.checkout.service.exception.CheckoutException;
 import org.broadleafcommerce.core.checkout.service.workflow.CheckoutResponse;
 import org.broadleafcommerce.core.order.domain.FulfillmentGroup;
 import org.broadleafcommerce.core.order.domain.Order;
 import org.broadleafcommerce.core.order.domain.OrderAttribute;
 import org.broadleafcommerce.core.order.domain.OrderAttributeImpl;
-import org.broadleafcommerce.core.order.domain.OrderItem;
 import org.broadleafcommerce.core.order.service.OrderService;
-import org.broadleafcommerce.core.order.service.OrderServiceImpl;
 import org.broadleafcommerce.core.pricing.service.exception.PricingException;
 import org.broadleafcommerce.core.web.api.BroadleafWebServicesException;
 import org.broadleafcommerce.core.web.api.wrapper.OrderPaymentWrapper;
@@ -54,13 +48,9 @@ import org.broadleafcommerce.core.web.api.wrapper.OrderWrapper;
 import org.broadleafcommerce.core.web.order.CartState;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import com.beautifulyears.BYConstants;
 import com.beautifulyears.api.wrapper.ExtendOrderPaymentWrapper;
 import com.beautifulyears.api.wrapper.ExtendOrderWrapper;
-import com.beautifulyears.domain.logistic.EmailOrderObject;
-import com.beautifulyears.sample.logistic.domain.PincodeImpl;
 import com.beautifulyears.sample.profile.domain.ExtendAddress;
 import com.beautifulyears.service.email.ExtendEmailService;
 import com.beautifulyears.service.email.ExtendEmailServiceImpl;
@@ -115,7 +105,6 @@ public class CheckoutEndpoint extends
 	public String getOrderSummary(@Context HttpServletRequest request,
 			@Context HttpServletResponse response,
 			@PathParam("orderId") Long orderId) {
-		System.out.println("called");
 		Order order = orderService.findOrderById(orderId);
 		String summary = ((ExtendEmailServiceImpl) emailService)
 				.getOrderSummary(order, null);
