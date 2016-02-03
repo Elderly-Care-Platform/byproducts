@@ -1,7 +1,13 @@
 package com.beautifulyears.api.endpoint.cart;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -172,6 +178,22 @@ public class CartEndpoint extends org.broadleafcommerce.core.web.api.endpoint.or
       @QueryParam("quantity") @DefaultValue("1") int quantity,
       @QueryParam("priceOrder") @DefaultValue("true") boolean priceOrder) {
     logger.debug("Executing method : addProductToOrder()");
+    Iterator<Entry<String, List<String>>> it = uriInfo.getQueryParameters().entrySet().iterator();
+    while (it.hasNext()) {
+    	Map.Entry<String, List<String>> pair = (Map.Entry<String, List<String>>) it
+				.next();
+    	List<String> value = pair.getValue();
+    	List<String> newList = new LinkedList<String>();
+    	for (String option : value) {
+			try {
+				option = URLDecoder.decode(option,"UTF-8");
+				newList.add(option);
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+		}
+    	uriInfo.getQueryParameters().put(pair.getKey(), newList);
+    }
     return super.addProductToOrder(request, uriInfo, productId, categoryId, quantity, priceOrder);
   }
 
