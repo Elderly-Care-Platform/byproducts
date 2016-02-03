@@ -178,6 +178,7 @@ public class CartEndpoint extends org.broadleafcommerce.core.web.api.endpoint.or
       @QueryParam("quantity") @DefaultValue("1") int quantity,
       @QueryParam("priceOrder") @DefaultValue("true") boolean priceOrder) {
     logger.debug("Executing method : addProductToOrder()");
+    System.out.println(uriInfo.getQueryParameters());
     Iterator<Entry<String, List<String>>> it = uriInfo.getQueryParameters().entrySet().iterator();
     while (it.hasNext()) {
     	Map.Entry<String, List<String>> pair = (Map.Entry<String, List<String>>) it
@@ -187,6 +188,7 @@ public class CartEndpoint extends org.broadleafcommerce.core.web.api.endpoint.or
     	for (String option : value) {
 			try {
 				option = URLDecoder.decode(option,"UTF-8");
+				System.out.print("--------------modified option = "+option);
 				newList.add(option);
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
