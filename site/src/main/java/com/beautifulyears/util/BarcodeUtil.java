@@ -35,7 +35,7 @@ public class BarcodeUtil {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
+System.out.println("barCodeImagePath = "+barCodeImagePath);
 		return barCodeImagePath;
 	}
 }
