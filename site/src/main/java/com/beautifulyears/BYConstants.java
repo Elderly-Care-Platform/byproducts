@@ -13,7 +13,7 @@ import com.google.common.collect.ImmutableList;
 public class BYConstants {
 	
 	/*for dev*/
-	public static final ImmutableList<String> ADMIN_EMAILS = ImmutableList.of("nitin.j@beautifulyears.com","jharana.v@beautifulyears.com");
+	public static final ImmutableList<String> ADMIN_EMAILS = ImmutableList.of("nitin.j@beautifulyears.com");
 	public static final String SITE_URL = "http://dev.beautifulyears.com";
 	public static final String LOGISTIC_API = "http://ecomm.prtouch.com";
 	public static final String LOGISTIC_USERNAME = "ecomexpress";
