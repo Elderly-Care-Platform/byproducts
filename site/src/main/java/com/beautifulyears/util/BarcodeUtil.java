@@ -30,12 +30,12 @@ public class BarcodeUtil {
 			HttpResponse response = httpclient.execute(httpget);
 			HttpEntity entity = response.getEntity();
 			barCodeImagePath = EntityUtils.toString(entity, "UTF-8");
-			barCodeImagePath = BYConstants.SITE_URL+barCodeImagePath;
+//			barCodeImagePath = BYConstants.SITE_URL+barCodeImagePath;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
+System.out.println("barCodeImagePath = "+barCodeImagePath);
 		return barCodeImagePath;
 	}
 }
