@@ -96,8 +96,9 @@ public class EmailOrderObject {
 		public void setTaxCode(String taxCode) {
 			this.taxCode = taxCode;
 			try {
-				this.setTaxAmount(Float.parseFloat(taxCode) * this.getPrice()
-						/ 100);
+				float taxPercentage = Float.parseFloat(taxCode);
+				this.setTaxAmount(taxPercentage * this.getPrice()
+						/ (100 + taxPercentage));
 			} catch (Exception e) {
 				this.setTaxAmount(0f);
 			}

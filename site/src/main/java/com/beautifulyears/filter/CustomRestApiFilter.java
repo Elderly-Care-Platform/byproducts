@@ -55,7 +55,7 @@ public class CustomRestApiFilter extends GenericFilterBean implements Ordered {
 		if (request.getAttribute(CustomerStateRequestProcessor
 				.getCustomerRequestAttributeName()) == null) {
 
-			System.out.println(request.getHeader("userId") + " , "
+			System.out.println("new request params = "+request.getHeader("userId") + " , "
 					+ request.getHeader("sessionId") + " , "
 					+ request.getHeader("email") + " , "
 					+ request.getHeader("userName") + " , "
