@@ -125,7 +125,7 @@
 
                 <span th:text="${order.shippingAddr1}" th:if="${order.deliveryType==0}"></span><br th:if="${order.deliveryType==0}"/>
 
-                <span th:text="${order.shippingAddr2}" th:if="${order.deliveryType==0}"></span><br th:if="${order.deliveryType==0}"/>
+                <span th:text="${order.shippingAddr2}"></span><b/>
 
                 India
             </td>
@@ -186,7 +186,7 @@
                                 <tr height="1"></tr>
                                 <tr>
                                     <td>
-                                        The goods sold as part of this shipment are intended for end user consumption/retial sale are not for re-sale.<br/>
+                                        The goods sold as part of this shipment are intended for end user consumption/retail sale are not for re-sale.<br/>
                                         E.&amp;O.E., Subject to Bangalore jurisdiction
                                     </td>
                                 </tr>

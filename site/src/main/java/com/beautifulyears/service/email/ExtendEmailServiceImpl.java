@@ -293,12 +293,17 @@ public class ExtendEmailServiceImpl implements ApplicationContextAware,
 		emailObj.setTotalDeliveryCharges(order.getTotalShipping().getAmount());
 
 		StringBuffer address2 = new StringBuffer("");
-		address2.append(order.getOrderAttributes().get("AddressLine2"));
-		address2.append(" ,");
-		address2.append(order.getOrderAttributes().get("City"));
-		address2.append(" , mob:");
+		if (!BYConstants.DELIVERY_MODE_PICKUP
+				.equals(emailObj.getDeliveryType())) {
+			address2.append(order.getOrderAttributes().get("AddressLine2"));
+			address2.append(" ,");
+			address2.append(order.getOrderAttributes().get("City"));
+			address2.append(" , ");
+		}
+		address2.append("mob:");
 		address2.append(order.getOrderAttributes().get("Phone"));
-		address2.append(" ,");
+		address2.append(" , email:");
+		address2.append(order.getOrderAttributes().get("Email"));
 		// props.put("address2", address2.toString());
 		emailObj.setShippingAddr2(address2.toString());
 		for (OrderItem item : order.getOrderItems()) {
@@ -308,8 +313,12 @@ public class ExtendEmailServiceImpl implements ApplicationContextAware,
 			EmailOrderObject.OrderItem itemObj = new EmailOrderObject.OrderItem();
 			ExtendProductImpl product = (ExtendProductImpl) ((DiscreteOrderItem) item)
 					.getProduct();
-			itemObj.setDeliveryCharge(new BigDecimal(product
-					.getProductDeliveryCharges()));
+			if (!BYConstants.DELIVERY_MODE_PICKUP.equals(emailObj
+					.getDeliveryType())) {
+				itemObj.setDeliveryCharge(new BigDecimal(product
+						.getProductDeliveryCharges()));
+			}
+
 			itemObj.setItemId(item.getId().toString());
 			itemObj.setItemName(item.getName());
 			itemObj.setPrice(item.getTotalPrice().getAmount().floatValue());

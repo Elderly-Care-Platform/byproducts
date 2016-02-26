@@ -96,12 +96,19 @@ public class EmailOrderObject {
 		public void setTaxCode(String taxCode) {
 			this.taxCode = taxCode;
 			try {
-				this.setTaxAmount(Float.parseFloat(taxCode) * this.getPrice()
-						/ 100);
+				float taxPercentage = Float.parseFloat(taxCode);
+				float deliveryCharge = this.getDeliveryCharge() == null ? 0
+						: this.getDeliveryCharge().floatValue();
+				float tax = 0f;
+				tax = (taxPercentage * this.getPrice() / (100 + taxPercentage))
+						+ (taxPercentage * deliveryCharge / (100 + taxPercentage));
+				BigDecimal bd = new BigDecimal(Float.toString(tax));
+				bd = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
+				tax = bd.floatValue();
+				this.setTaxAmount(tax);
 			} catch (Exception e) {
 				this.setTaxAmount(0f);
 			}
-
 		}
 
 		public String getItemName() {
